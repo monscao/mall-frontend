@@ -1,0 +1,257 @@
+:root {
+  --bg: #060606;
+  --surface: #0f0f10;
+  --text: #f4f4f0;
+  --muted: rgba(244, 244, 240, 0.68);
+  --line: rgba(255, 255, 255, 0.08);
+  --accent: #d9ff63;
+  --shadow: 0 32px 80px rgba(0, 0, 0, 0.35);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  margin: 0;
+  min-height: 100%;
+}
+
+body {
+  background:
+    radial-gradient(circle at top, rgba(255, 255, 255, 0.08), transparent 22%),
+    linear-gradient(180deg, #050505 0%, #090909 35%, #111111 100%);
+  color: var(--text);
+  font-family: "Helvetica Neue", "Arial Narrow", Arial, sans-serif;
+}
+
+img {
+  display: block;
+  width: 100%;
+}
+
+.page-shell {
+  display: grid;
+  gap: 3rem;
+  padding: 1.5rem;
+}
+
+.hero-panel,
+.story-rail,
+.product-section {
+  border: 1px solid var(--line);
+  border-radius: 2rem;
+  background: linear-gradient(180deg, rgba(20, 20, 20, 0.92), rgba(10, 10, 10, 0.96));
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+
+.hero-panel {
+  display: grid;
+  gap: 2rem;
+  min-height: 92vh;
+  align-items: center;
+  padding: clamp(2rem, 5vw, 5rem);
+}
+
+.hero-copy {
+  display: grid;
+  gap: 1.25rem;
+  max-width: 52rem;
+}
+
+.eyebrow,
+.section-heading span,
+.product-topline span,
+.category-content span {
+  color: var(--accent);
+  font-size: 0.8rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+
+.hero-copy h1 {
+  margin: 0;
+  max-width: 14ch;
+  font-size: clamp(3.3rem, 11vw, 8rem);
+  line-height: 0.92;
+  letter-spacing: -0.06em;
+}
+
+.hero-copy p {
+  margin: 0;
+  max-width: 38rem;
+  color: var(--muted);
+  font-size: clamp(1rem, 2vw, 1.25rem);
+  line-height: 1.7;
+}
+
+.hero-meta,
+.tag-row,
+.price-line {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+.hero-meta span,
+.tag-pill {
+  padding: 0.55rem 0.85rem;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.03);
+  font-size: 0.82rem;
+}
+
+.tag-pill.muted {
+  color: var(--muted);
+}
+
+.hero-product {
+  display: grid;
+  gap: 1rem;
+  align-self: end;
+}
+
+.hero-product img {
+  aspect-ratio: 5 / 4;
+  border-radius: 1.5rem;
+  object-fit: cover;
+}
+
+.hero-product-card {
+  display: grid;
+  gap: 1rem;
+  padding: 1.25rem;
+  border: 1px solid var(--line);
+  border-radius: 1.5rem;
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.hero-product-card h2,
+.section-heading h3,
+.product-card h4,
+.category-content h4 {
+  margin: 0;
+}
+
+.hero-product-card p,
+.section-heading p,
+.product-card p,
+.category-content p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.65;
+}
+
+.story-rail,
+.product-section {
+  padding: clamp(1.4rem, 3vw, 2rem);
+}
+
+.section-heading {
+  display: grid;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.section-heading h3 {
+  font-size: clamp(1.8rem, 4vw, 3.6rem);
+  line-height: 0.98;
+  letter-spacing: -0.04em;
+  max-width: 16ch;
+}
+
+.category-strip {
+  display: grid;
+  gap: 1rem;
+}
+
+.category-card,
+.product-card {
+  position: relative;
+  overflow: hidden;
+  border-radius: 1.5rem;
+  border: 1px solid var(--line);
+  background: var(--surface);
+}
+
+.category-card img {
+  height: 18rem;
+  object-fit: cover;
+}
+
+.category-card .overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.08), rgba(0, 0, 0, 0.72));
+}
+
+.category-content {
+  position: absolute;
+  inset: auto 0 0 0;
+  display: grid;
+  gap: 0.5rem;
+  padding: 1.25rem;
+}
+
+.product-grid {
+  display: grid;
+  gap: 1rem;
+}
+
+.product-card {
+  display: grid;
+}
+
+.product-visual img {
+  height: 18rem;
+  object-fit: cover;
+}
+
+.product-body {
+  display: grid;
+  gap: 0.8rem;
+  padding: 1.2rem;
+}
+
+.product-topline {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.price {
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
+.market-price {
+  color: var(--muted);
+  text-decoration: line-through;
+}
+
+@media (min-width: 900px) {
+  .page-shell {
+    padding: 1.75rem;
+  }
+
+  .hero-panel {
+    grid-template-columns: 1.2fr 0.9fr;
+  }
+
+  .category-strip {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .product-grid-wide {
+    grid-template-columns: 1.1fr 0.9fr;
+  }
+
+  .product-grid-compact {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}

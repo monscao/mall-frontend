@@ -1,0 +1,28 @@
+{
+  "name": "mall-frontend",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Apple Lite storefront frontend for the mall platform",
+  "scripts": {
+    "start": "webpack serve --mode development",
+    "build": "webpack --mode production"
+  },
+  "dependencies": {
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.29.0",
+    "@babel/preset-env": "^7.29.2",
+    "@babel/preset-react": "^7.28.5",
+    "@pmmmwh/react-refresh-webpack-plugin": "^0.6.2",
+    "babel-loader": "^10.1.1",
+    "css-loader": "^7.1.4",
+    "html-webpack-plugin": "^5.6.6",
+    "react-refresh": "^0.18.0",
+    "style-loader": "^4.0.0",
+    "webpack": "^5.105.4",
+    "webpack-cli": "^7.0.2",
+    "webpack-dev-server": "^5.2.3"
+  }
+}
