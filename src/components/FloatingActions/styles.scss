@@ -1,0 +1,17 @@
+.floating-actions {
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
+  z-index: 30;
+  display: grid;
+  gap: 12px;
+  justify-items: end;
+
+  .floating-cart-button,
+  .floating-mini-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+  }
+}

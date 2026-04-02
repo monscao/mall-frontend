@@ -13,7 +13,18 @@ module.exports = {
     publicPath: "/"
   },
   resolve: {
-    extensions: [".js", ".jsx"]
+    extensions: [".js", ".jsx"],
+    alias: {
+      app: path.resolve(__dirname, "src/app"),
+      assets: path.resolve(__dirname, "src/assets"),
+      components: path.resolve(__dirname, "src/components"),
+      context: path.resolve(__dirname, "src/context"),
+      hooks: path.resolve(__dirname, "src/hooks"),
+      pages: path.resolve(__dirname, "src/pages"),
+      routes: path.resolve(__dirname, "src/routes"),
+      services: path.resolve(__dirname, "src/services"),
+      shared: path.resolve(__dirname, "src/shared")
+    }
   },
   module: {
     rules: [
@@ -27,6 +38,14 @@ module.exports = {
       {
         test: /\.css$/,
         use: ["style-loader", "css-loader"]
+      },
+      {
+        test: /\.scss$/,
+        use: ["style-loader", "css-loader", "sass-loader"]
+      },
+      {
+        test: /\.(png|jpe?g|gif|svg|webp)$/i,
+        type: "asset/resource"
       }
     ]
   },
@@ -45,7 +64,7 @@ module.exports = {
     },
     proxy: [
       {
-        context: ["/api"],
+        context: ["/api", "/uploads"],
         target: "http://localhost:8080",
         changeOrigin: true
       }

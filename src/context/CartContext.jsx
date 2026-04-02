@@ -1,23 +1,37 @@
-import { createContext, useContext, useMemo, useState } from "react";
+import { createContext, useContext, useEffect, useMemo, useState } from "react";
+import { useAuth } from "context/AuthContext";
 
 const CartContext = createContext(null);
-const CART_STORAGE_KEY = "mall-frontend-cart";
+const CART_STORAGE_KEY_PREFIX = "mall-frontend-cart";
 
-function readStoredCart() {
+function readStoredCart(storageKey) {
   try {
-    const raw = window.localStorage.getItem(CART_STORAGE_KEY);
+    const raw = window.localStorage.getItem(storageKey);
     return raw ? JSON.parse(raw) : [];
   } catch (_error) {
     return [];
   }
 }
 
-function writeStoredCart(items) {
-  window.localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(items));
+function writeStoredCart(storageKey, items) {
+  window.localStorage.setItem(storageKey, JSON.stringify(items));
 }
 
 export function CartProvider({ children }) {
-  const [items, setItems] = useState(() => readStoredCart());
+  const { authReady, session } = useAuth();
+  const cartStorageKey = useMemo(() => {
+    const identity = session?.currentUser?.username || session?.username || "guest";
+    return `${CART_STORAGE_KEY_PREFIX}:${identity}`;
+  }, [session]);
+  const [items, setItems] = useState([]);
+
+  useEffect(() => {
+    if (!authReady) {
+      return;
+    }
+
+    setItems(readStoredCart(cartStorageKey));
+  }, [authReady, cartStorageKey]);
 
   const value = useMemo(() => {
     const totalItems = items.reduce((sum, item) => sum + item.quantity, 0);
@@ -45,7 +59,7 @@ export function CartProvider({ children }) {
             nextItems = [...currentItems, { ...item, quantity: item.quantity || 1 }];
           }
 
-          writeStoredCart(nextItems);
+          writeStoredCart(cartStorageKey, nextItems);
           return nextItems;
         });
       },
@@ -64,23 +78,23 @@ export function CartProvider({ children }) {
             })
             .filter(Boolean);
 
-          writeStoredCart(nextItems);
+          writeStoredCart(cartStorageKey, nextItems);
           return nextItems;
         });
       },
       removeItem(skuCode) {
         setItems((currentItems) => {
           const nextItems = currentItems.filter((item) => item.skuCode !== skuCode);
-          writeStoredCart(nextItems);
+          writeStoredCart(cartStorageKey, nextItems);
           return nextItems;
         });
       },
       clearCart() {
         setItems([]);
-        writeStoredCart([]);
+        writeStoredCart(cartStorageKey, []);
       }
     };
-  }, [items]);
+  }, [cartStorageKey, items]);
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>;
 }

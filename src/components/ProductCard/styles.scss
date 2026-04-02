@@ -1,0 +1,18 @@
+.product-card {
+  display: grid;
+  grid-template-rows: auto 1fr;
+
+  .product-visual {
+    padding: 0;
+  }
+
+  .product-body {
+    grid-template-rows: auto auto 1fr auto auto;
+    min-height: 100%;
+  }
+
+  .product-copy,
+  .product-footer {
+    display: grid;
+  }
+}

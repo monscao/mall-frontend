@@ -1,0 +1,203 @@
+.site-footer {
+  display: grid;
+  gap: 28px;
+  padding: clamp(18px, 2.6vw, 24px);
+
+  padding-bottom: 36px;
+
+  .footer-top {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(420px, 0.95fr);
+    gap: 28px;
+    align-items: stretch;
+  }
+
+  .footer-brand {
+    display: inline-grid;
+    grid-template-columns: auto 1fr;
+    align-items: start;
+    gap: 14px;
+  }
+
+  .footer-brand-column {
+    display: grid;
+    align-content: space-between;
+    gap: 22px;
+    min-height: 100%;
+  }
+
+  .footer-brand-column-wide {
+    padding-right: 12px;
+  }
+
+  .footer-badge-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .footer-badge {
+    display: inline-flex;
+    align-items: center;
+    min-height: 40px;
+    padding: 0 14px;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    background: var(--soft-fill);
+    color: var(--muted);
+  }
+
+  .footer-callout {
+    display: grid;
+    gap: 14px;
+    padding: 0;
+    border: 0;
+    background: transparent;
+
+    h3 {
+      margin: 0;
+      font-size: clamp(1.18rem, 1.8vw, 1.42rem);
+      line-height: 1.08;
+    }
+  }
+
+  .footer-subscribe-card {
+    min-height: 100%;
+    padding: 22px;
+    border: 1px solid var(--line);
+    border-radius: 24px;
+    background:
+      radial-gradient(circle at top right, color-mix(in srgb, var(--accent) 14%, transparent), transparent 36%),
+      color-mix(in srgb, var(--surface-muted) 92%, transparent);
+  }
+
+  .footer-subscribe-row {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    margin-top: 2px;
+  }
+
+  .footer-subscribe-input {
+    flex: 1 1 auto;
+    min-height: 46px;
+    padding: 0 16px;
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    background: var(--input-bg);
+    color: var(--text);
+  }
+
+  .footer-subscribe-button {
+    min-width: 132px;
+  }
+
+  .footer-links {
+    display: grid;
+    gap: 16px;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .footer-links-expanded {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    margin-top: 0;
+    padding-top: 24px;
+    border-top: 1px solid var(--line);
+  }
+
+  .footer-links section {
+    display: grid;
+    gap: 4px;
+
+    span {
+      font-size: 0.98rem;
+      font-weight: 700;
+      letter-spacing: 0.01em;
+      color: color-mix(in srgb, var(--text) 78%, var(--muted) 22%);
+    }
+  }
+
+  .footer-link {
+    display: inline-flex;
+    align-items: center;
+    min-height: 24px;
+    font-size: 0.82rem;
+    font-weight: 500;
+    line-height: 1.22;
+    color: color-mix(in srgb, var(--muted) 90%, var(--bg-strong) 10%);
+  }
+
+  .footer-bottom {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-top: 0;
+    padding-top: 20px;
+    border-top: 1px solid var(--line);
+    color: var(--muted);
+  }
+
+  .footer-bottom-left,
+  .footer-bottom-right {
+    display: flex;
+    gap: 18px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  .footer-meta-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 14px;
+    border-radius: 999px;
+    background: var(--soft-fill);
+    cursor: pointer;
+  }
+
+  .footer-social {
+    display: inline-grid;
+    place-items: center;
+    width: 42px;
+    height: 42px;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    background: var(--soft-fill);
+    color: var(--muted);
+    cursor: pointer;
+
+    &:hover {
+      color: var(--text);
+      border-color: color-mix(in srgb, var(--accent) 35%, var(--line));
+      background: color-mix(in srgb, var(--accent) 12%, var(--soft-fill));
+    }
+  }
+
+  @media (max-width: 1100px) {
+    .footer-top,
+    .footer-links,
+    .footer-links-expanded {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (max-width: 760px) {
+    .footer-badge {
+      width: 100%;
+      justify-content: center;
+    }
+
+    .footer-subscribe-row,
+    .footer-bottom,
+    .footer-bottom-left,
+    .footer-bottom-right {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .footer-links-expanded {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+}

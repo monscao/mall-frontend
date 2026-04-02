@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
-import { fetchCurrentUser, loginUser, registerUser } from "../lib/api";
+import { fetchCurrentUser, loginUser, registerUser } from "services/api";
 
 const AuthContext = createContext(null);
 const AUTH_STORAGE_KEY = "mall-frontend-auth";
@@ -59,6 +59,7 @@ export function AuthProvider({ children }) {
     () => ({
       authReady,
       isAuthenticated: Boolean(session?.token),
+      isAdmin: Boolean(session?.currentUser?.roleCodes?.includes("ADMIN") || session?.roleCodes?.includes("ADMIN")),
       session,
       async login(payload) {
         const response = await loginUser(payload);

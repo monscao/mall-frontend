@@ -1,0 +1,37 @@
+.hero-panel {
+  display: grid;
+  grid-template-columns: 1.08fr 0.92fr;
+  gap: 24px;
+
+  .hero-copy,
+  .hero-product,
+  .hero-product-card {
+    display: grid;
+  }
+}
+
+.section-heading {
+  display: grid;
+
+  &.section-heading-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+}
+
+.category-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.category-card {
+  position: relative;
+  text-align: left;
+}
+
+.section-more-link {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
