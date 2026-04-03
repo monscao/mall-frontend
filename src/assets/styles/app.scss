@@ -2763,6 +2763,15 @@ html[data-theme="light"] .floating-top-label {
     border-radius: 24px;
   }
 
+  .brand-lockup {
+    width: 100%;
+    grid-template-columns: auto 1fr auto;
+  }
+
+  .header-mobile-toggle {
+    justify-self: end;
+  }
+
   .header-nav,
   .header-actions {
     width: 100%;
@@ -2795,13 +2804,43 @@ html[data-theme="light"] .floating-top-label {
 
   .hero-panel {
     min-height: auto;
+    grid-template-columns: 1fr;
     gap: 18px;
     padding: 22px 18px;
   }
 
   .hero-copy h1 {
+    max-width: 8ch;
+    font-size: clamp(2.2rem, 10vw, 3.4rem);
+    line-height: 0.98;
+  }
+
+  .hero-copy p {
     max-width: none;
-    font-size: clamp(2.6rem, 16vw, 4.3rem);
+  }
+
+  .hero-product {
+    align-self: start;
+  }
+
+  .hero-product-card {
+    grid-template-rows: auto auto;
+  }
+
+  .hero-product img {
+    width: 100%;
+    aspect-ratio: 16 / 10;
+    height: auto;
+  }
+
+  .hero-product-footer {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .hero-product-price,
+  .hero-product-footer .text-link {
+    white-space: normal;
   }
 
   .product-grid,
@@ -2831,7 +2870,19 @@ html[data-theme="light"] .floating-top-label {
   }
 
   .footer-links-expanded {
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }
+
+  .footer-links section {
+    gap: 10px;
+    padding-top: 8px;
+    border-top: 1px solid var(--line);
+  }
+
+  .footer-links section:first-child {
+    padding-top: 0;
+    border-top: 0;
   }
 
   .footer-badge-row {
@@ -2849,6 +2900,17 @@ html[data-theme="light"] .floating-top-label {
   .footer-bottom-right {
     flex-direction: column;
     align-items: flex-start;
+  }
+
+  .footer-subscribe-button,
+  .footer-subscribe-input,
+  .footer-meta-pill {
+    width: 100%;
+  }
+
+  .footer-bottom-right {
+    width: 100%;
+    gap: 12px;
   }
 
   .floating-actions {
