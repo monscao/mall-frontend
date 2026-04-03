@@ -3060,6 +3060,15 @@ html[data-theme="light"] .floating-top-label {
 
   .account-overview {
     grid-template-columns: 1fr;
+    gap: 14px;
+    align-items: start;
+  }
+
+  .account-avatar {
+    width: 56px;
+    height: 56px;
+    border-radius: 18px;
+    font-size: 1.15rem;
   }
 
   .detail-actions > button {
@@ -3102,6 +3111,12 @@ html[data-theme="light"] .floating-top-label {
 
   .order-card {
     padding: 18px;
+  }
+
+  .checkout-line {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
   }
 
   .order-card-head {
@@ -3181,6 +3196,11 @@ html[data-theme="light"] .floating-top-label {
     letter-spacing: 0.08em;
   }
 
+  .management-product-cell::before {
+    grid-column: 1 / -1;
+    margin-bottom: 2px;
+  }
+
   .management-actions {
     grid-auto-flow: row;
   }
@@ -3192,6 +3212,13 @@ html[data-theme="light"] .floating-top-label {
 
   .management-form-field {
     padding-top: 2px;
+  }
+
+  .management-head .primary-button,
+  .management-head .secondary-button,
+  .management-head .text-button {
+    width: 100%;
+    justify-content: center;
   }
 
   .management-row-editor {
@@ -3214,6 +3241,17 @@ html[data-theme="light"] .floating-top-label {
     width: 100%;
   }
 
+  .section-heading.section-heading-row {
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .section-heading-row .text-link,
+  .section-more-link {
+    justify-content: flex-start;
+    white-space: normal;
+  }
+
   .detail-actions,
   .toolbar {
     flex-direction: column;
@@ -3234,5 +3272,29 @@ html[data-theme="light"] .floating-top-label {
   .floating-cart-button {
     min-height: 52px;
     padding: 0 16px;
+  }
+
+  .admin-product-form .section-heading-row h3,
+  .checkout-form h3,
+  .checkout-summary h3,
+  .detail-column h3 {
+    font-size: 1.02rem;
+  }
+
+  .upload-block,
+  .admin-sku-card,
+  .detail-column,
+  .order-card,
+  .checkout-summary,
+  .checkout-form {
+    padding: 16px;
+  }
+
+  .upload-gallery {
+    grid-template-columns: repeat(auto-fit, minmax(72px, 1fr));
+  }
+
+  .upload-preview.small {
+    height: 72px;
   }
 }
