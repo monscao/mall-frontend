@@ -2610,10 +2610,8 @@ html[data-theme="light"] .floating-top-label {
   }
 
   .header-inner.is-mobile-open {
-    border-radius: 28px;
-    background:
-      linear-gradient(180deg, color-mix(in srgb, var(--header-bg) 94%, #0a1220 6%), color-mix(in srgb, var(--surface) 98%, transparent)),
-      var(--header-bg);
+    border-bottom-left-radius: 24px;
+    border-bottom-right-radius: 24px;
   }
 
   .brand-lockup {
@@ -2627,13 +2625,21 @@ html[data-theme="light"] .floating-top-label {
   }
 
   .header-mobile-panel {
-    grid-column: 1 / -1;
+    position: absolute;
+    top: calc(100% + 10px);
+    left: 0;
+    right: 0;
     display: none;
     gap: 12px;
-    width: 100%;
-    margin-top: 4px;
-    padding-top: 14px;
-    border-top: 1px solid var(--line);
+    padding: 14px;
+    border: 1px solid var(--panel-border);
+    border-radius: 24px;
+    background:
+      linear-gradient(180deg, color-mix(in srgb, var(--header-bg) 94%, #0a1220 6%), color-mix(in srgb, var(--surface) 98%, transparent)),
+      var(--header-bg);
+    backdrop-filter: blur(24px);
+    box-shadow: 0 18px 44px rgba(4, 12, 24, 0.34);
+    z-index: 95;
   }
 
   .header-mobile-panel.is-open {
@@ -2641,7 +2647,6 @@ html[data-theme="light"] .floating-top-label {
   }
 
   .header-nav {
-    grid-column: 1 / -1;
     width: 100%;
     justify-content: flex-start;
     flex-direction: column;
@@ -2821,8 +2826,9 @@ html[data-theme="light"] .floating-top-label {
 
   .header-mobile-panel {
     gap: 10px;
-    margin-top: 0;
-    padding-top: 12px;
+    top: calc(100% + 8px);
+    padding: 12px;
+    border-radius: 22px;
   }
 
   .header-actions-minimal {
@@ -2853,6 +2859,21 @@ html[data-theme="light"] .floating-top-label {
     grid-template-columns: 1fr;
     gap: 18px;
     padding: 22px 18px;
+  }
+
+  .hero-cta {
+    display: grid;
+    grid-template-columns: 1fr;
+    width: 100%;
+  }
+
+  .hero-cta .primary-button,
+  .hero-cta .secondary-button {
+    width: 100%;
+    justify-content: center;
+    min-height: 52px;
+    white-space: normal;
+    text-align: center;
   }
 
   .hero-copy h1 {
@@ -2956,11 +2977,11 @@ html[data-theme="light"] .floating-top-label {
 
   .footer-bottom-right {
     width: 100%;
+    display: grid;
+    grid-template-columns: repeat(4, max-content);
     justify-content: flex-start;
     gap: 10px;
-    flex-direction: row;
     align-items: center;
-    flex-wrap: wrap;
   }
 
   .footer-social {
