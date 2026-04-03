@@ -74,6 +74,6 @@ Included GitHub Actions:
 
 - [`Frontend CI`](/Users/monscao/Documents/mall-frontend/.github/workflows/ci.yml): runs Jest and the webpack production build
 - [`Frontend Publish`](/Users/monscao/Documents/mall-frontend/.github/workflows/publish.yml): builds and pushes `ghcr.io/<owner>/mall-frontend`
-- [`Frontend Deploy`](/Users/monscao/Documents/mall-frontend/.github/workflows/deploy.yml): on push to `main`, SSHes into the AWS server and runs `~/bin/deploy-mall.sh`
+- [`Frontend Deploy`](/Users/monscao/Documents/mall-frontend/.github/workflows/deploy.yml): optional manual SSH deploy workflow
 
 This frontend image is meant to be paired with the backend deployment compose file in `/Users/monscao/Documents/mall-backend/deploy/docker-compose.prod.yml`.
