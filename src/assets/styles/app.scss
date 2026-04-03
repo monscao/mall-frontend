@@ -155,6 +155,10 @@ img {
   gap: 20px;
 }
 
+.header-mobile-panel {
+  display: contents;
+}
+
 .brand-lockup,
 .footer-brand {
   display: inline-grid;
@@ -2600,9 +2604,16 @@ html[data-theme="light"] .floating-top-label {
 
   .header-inner {
     grid-template-columns: auto auto;
-    align-items: start;
+    align-items: center;
     justify-content: space-between;
     border-radius: 28px;
+  }
+
+  .header-inner.is-mobile-open {
+    border-radius: 28px;
+    background:
+      linear-gradient(180deg, color-mix(in srgb, var(--header-bg) 94%, #0a1220 6%), color-mix(in srgb, var(--surface) 98%, transparent)),
+      var(--header-bg);
   }
 
   .brand-lockup {
@@ -2615,19 +2626,28 @@ html[data-theme="light"] .floating-top-label {
     justify-self: end;
   }
 
-  .header-nav {
+  .header-mobile-panel {
     grid-column: 1 / -1;
     display: none;
+    gap: 12px;
+    width: 100%;
+    margin-top: 4px;
+    padding-top: 14px;
+    border-top: 1px solid var(--line);
+  }
+
+  .header-mobile-panel.is-open {
+    display: grid;
+  }
+
+  .header-nav {
+    grid-column: 1 / -1;
     width: 100%;
     justify-content: flex-start;
     flex-direction: column;
     align-items: stretch;
     gap: 8px;
-    padding-top: 10px;
-  }
-
-  .header-nav.is-open {
-    display: flex;
+    padding-top: 0;
   }
 
   .nav-link {
@@ -2637,16 +2657,13 @@ html[data-theme="light"] .floating-top-label {
   }
 
   .header-actions-minimal {
-    display: none;
-    grid-column: 1 / -1;
+    display: flex;
     width: 100%;
     justify-content: flex-start;
-    flex-wrap: wrap;
-    padding-top: 4px;
-  }
-
-  .header-actions-minimal.is-open {
-    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+    padding-top: 2px;
   }
 
   .auth-actions-minimal {
@@ -2674,6 +2691,8 @@ html[data-theme="light"] .floating-top-label {
   .language-menu-trigger,
   .theme-toggle {
     width: 100%;
+    min-height: 46px;
+    justify-content: center;
   }
 
   .user-menu-panel,
@@ -2691,7 +2710,9 @@ html[data-theme="light"] .floating-top-label {
     overflow: hidden;
     transform: none;
     pointer-events: none;
+    border-radius: 18px;
     box-shadow: none;
+    background: color-mix(in srgb, var(--surface-muted) 88%, transparent);
   }
 
   .user-menu-panel.is-open,
@@ -2780,33 +2801,33 @@ html[data-theme="light"] .floating-top-label {
   }
 
   .header-inner {
-    grid-template-columns: 1fr;
-    justify-items: start;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
     width: min(calc(100% - 20px), var(--container));
     gap: 14px;
-    padding: 16px;
-    border-radius: 24px;
+    padding: 14px;
+    border-radius: 22px;
   }
 
   .brand-lockup {
-    width: 100%;
-    grid-template-columns: auto 1fr auto;
+    width: min-content;
+    min-width: 0;
+    grid-template-columns: auto 1fr;
   }
 
   .header-mobile-toggle {
     justify-self: end;
   }
 
-  .header-nav,
-  .header-actions {
-    width: 100%;
-    justify-content: flex-start;
-    flex-wrap: wrap;
+  .header-mobile-panel {
+    gap: 10px;
+    margin-top: 0;
+    padding-top: 12px;
   }
 
   .header-actions-minimal {
     width: 100%;
-    gap: 12px;
+    gap: 10px;
   }
 
   .app-main {
@@ -2897,8 +2918,8 @@ html[data-theme="light"] .floating-top-label {
   }
 
   .footer-links-expanded {
-    grid-template-columns: 1fr;
-    gap: 18px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
   }
 
   .footer-links section {
@@ -2923,21 +2944,34 @@ html[data-theme="light"] .floating-top-label {
 
   .footer-subscribe-row,
   .footer-bottom,
-  .footer-bottom-left,
-  .footer-bottom-right {
+  .footer-bottom-left {
     flex-direction: column;
     align-items: flex-start;
   }
 
   .footer-subscribe-button,
-  .footer-subscribe-input,
-  .footer-meta-pill {
+  .footer-subscribe-input {
     width: 100%;
   }
 
   .footer-bottom-right {
     width: 100%;
-    gap: 12px;
+    justify-content: flex-start;
+    gap: 10px;
+    flex-direction: row;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  .footer-social {
+    width: 40px;
+    height: 40px;
+  }
+
+  .footer-meta-pill {
+    width: auto;
+    min-height: 40px;
+    padding-inline: 12px;
   }
 
   .floating-actions {
