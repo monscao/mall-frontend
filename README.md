@@ -16,6 +16,22 @@ Dev server URL: `http://localhost:3000`
 npm run build
 ```
 
+## Docker
+
+Build a production frontend image locally:
+
+```bash
+docker build -t mall-frontend:local .
+```
+
+The frontend image uses Nginx to:
+
+- serve the React build
+- proxy `/api/*` to the backend container
+- proxy `/uploads/*` to the backend container
+
+Nginx config lives in [`nginx/default.conf`](/Users/monscao/Documents/mall-frontend/nginx/default.conf).
+
 ## Backend Dependency
 
 The frontend expects the backend to be available at `http://localhost:8080`.
@@ -51,3 +67,12 @@ Webpack dev server proxies:
 - A guest cart is stored in `localStorage`.
 - Guest cart items are merged into the backend cart after login.
 - Uploaded product images are served from backend `/uploads/*`.
+
+## CI/CD
+
+Included GitHub Actions:
+
+- [`Frontend CI`](/Users/monscao/Documents/mall-frontend/.github/workflows/ci.yml): runs Jest and the webpack production build
+- [`Frontend Publish`](/Users/monscao/Documents/mall-frontend/.github/workflows/publish.yml): builds and pushes `ghcr.io/<owner>/mall-frontend`
+
+This frontend image is meant to be paired with the backend deployment compose file in `/Users/monscao/Documents/mall-backend/deploy/docker-compose.prod.yml`.
