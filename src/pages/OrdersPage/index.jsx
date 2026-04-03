@@ -3,11 +3,11 @@ import { useEffect, useState } from "react";
 import { SectionState } from "components/SectionState";
 import { useAuth } from "context/AuthContext";
 import { useI18n } from "context/I18nContext";
-import { fetchOrders, getErrorTone, getReadableErrorMessage } from "services/api";
+import { cancelOrder, fetchAdminOrders, fetchOrders, getErrorTone, getReadableErrorMessage, updateOrderStatus } from "services/api";
 import { formatCurrency } from "shared/utils/format";
 
 export function OrdersPage({ navigate }) {
-  const { isAuthenticated, session } = useAuth();
+  const { hasPermission, isAdmin, isAuthenticated, session } = useAuth();
   const { locale, t } = useI18n();
   const [state, setState] = useState({
     loading: true,
@@ -22,7 +22,8 @@ export function OrdersPage({ navigate }) {
     }
 
     let active = true;
-    fetchOrders(session.token)
+    const request = hasPermission("ORDER:MANAGE") || isAdmin ? fetchAdminOrders(session.token) : fetchOrders(session.token);
+    request
       .then((orders) => {
         if (active) {
           setState({ loading: false, orders, error: "" });
@@ -37,7 +38,7 @@ export function OrdersPage({ navigate }) {
     return () => {
       active = false;
     };
-  }, [isAuthenticated, session]);
+  }, [hasPermission, isAdmin, isAuthenticated, session]);
 
   if (!isAuthenticated) {
     return (
@@ -118,6 +119,58 @@ export function OrdersPage({ navigate }) {
                   <span>{t("sort.latest")}</span>
                   <strong>{order.createdAt}</strong>
                 </div>
+              </div>
+              <div className="management-actions">
+                {order.customerActionable && !hasPermission("ORDER:MANAGE") ? (
+                  <button
+                    className="text-button"
+                    type="button"
+                    onClick={async () => {
+                      try {
+                        const updated = await cancelOrder(order.id, session.token);
+                        setState((current) => ({
+                          ...current,
+                          orders: current.orders.map((item) =>
+                            item.id === order.id
+                              ? { ...item, status: updated.status, customerActionable: updated.customerActionable }
+                              : item
+                          )
+                        }));
+                      } catch (error) {
+                        setState((current) => ({ ...current, error }));
+                      }
+                    }}
+                  >
+                    {t("orders.cancel")}
+                  </button>
+                ) : null}
+                {hasPermission("ORDER:MANAGE")
+                  ? ["PAID", "PROCESSING", "SHIPPED", "COMPLETED", "CANCELLED"].map((status) => (
+                      <button
+                        className="text-button"
+                        key={`${order.id}-${status}`}
+                        type="button"
+                        disabled={order.status === status}
+                        onClick={async () => {
+                          try {
+                            const updated = await updateOrderStatus(order.id, status, session.token);
+                            setState((current) => ({
+                              ...current,
+                              orders: current.orders.map((item) =>
+                                item.id === order.id
+                                  ? { ...item, status: updated.status, customerActionable: updated.customerActionable }
+                                  : item
+                              )
+                            }));
+                          } catch (error) {
+                            setState((current) => ({ ...current, error }));
+                          }
+                        }}
+                      >
+                        {t(`orders.status.${status}`) || status}
+                      </button>
+                    ))
+                  : null}
               </div>
             </article>
           ))}

@@ -8,7 +8,7 @@ import { createOrder, getReadableErrorMessage } from "services/api";
 import { formatCurrency } from "shared/utils/format";
 
 export function CheckoutPage({ navigate }) {
-  const { items, subtotal, clearCart } = useCart();
+  const { cartReady, items, subtotal, clearCart } = useCart();
   const { isAuthenticated, session } = useAuth();
   const { locale, t } = useI18n();
   const { pushNotification } = useNotification();
@@ -25,6 +25,10 @@ export function CheckoutPage({ navigate }) {
     address: "",
     note: ""
   });
+
+  if (!cartReady) {
+    return <SectionState title={t("checkout.heading")} body={t("cart.syncing")} tone="loading" />;
+  }
 
   if (placed) {
     return (
@@ -103,7 +107,7 @@ export function CheckoutPage({ navigate }) {
                 },
                 session.token
               );
-              clearCart();
+              await clearCart();
               pushNotification({
                 tone: "success",
                 title: t("checkout.success.title"),

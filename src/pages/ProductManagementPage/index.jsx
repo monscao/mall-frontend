@@ -3,7 +3,7 @@ import { SectionState } from "components/SectionState";
 import { useAuth } from "context/AuthContext";
 import { useI18n } from "context/I18nContext";
 import { useNotification } from "context/NotificationContext";
-import { deleteAdminProduct, fetchAdminProducts, fetchCategories, getReadableErrorMessage, updateAdminProduct } from "services/api";
+import { deleteAdminProduct, fetchAdminProducts, fetchCategories, getReadableErrorMessage, updateAdminProduct, updateAdminProductShelf } from "services/api";
 import { SafeImage } from "components/SafeImage";
 
 function createEditForm(product) {
@@ -23,7 +23,7 @@ function createEditForm(product) {
 }
 
 export function ProductManagementPage({ navigate }) {
-  const { isAdmin, session } = useAuth();
+  const { hasPermission, isAdmin, session } = useAuth();
   const { t } = useI18n();
   const { pushNotification } = useNotification();
   const [categories, setCategories] = useState([]);
@@ -32,6 +32,7 @@ export function ProductManagementPage({ navigate }) {
   const [form, setForm] = useState(null);
   const [savingId, setSavingId] = useState(null);
   const [deletingId, setDeletingId] = useState(null);
+  const canPublish = hasPermission("PRODUCT:PUBLISH");
 
   const token = session?.token;
   const fallbackErrorMessage = () => t("error.network.body");
@@ -153,7 +154,7 @@ export function ProductManagementPage({ navigate }) {
                   {isEditing ? (
                     <div className="management-toggle-grid">
                       <label><input checked={activeForm.featured} type="checkbox" onChange={(event) => setForm((current) => ({ ...current, featured: event.target.checked }))} /> {t("admin.management.featured")}</label>
-                      <label><input checked={activeForm.onShelf} type="checkbox" onChange={(event) => setForm((current) => ({ ...current, onShelf: event.target.checked }))} /> {t("admin.management.onShelf")}</label>
+                      <label><input checked={activeForm.onShelf} disabled={!canPublish} type="checkbox" onChange={(event) => setForm((current) => ({ ...current, onShelf: event.target.checked }))} /> {t("admin.management.onShelf")}</label>
                     </div>
                   ) : (
                     <span>{product.onShelf ? t("admin.management.live") : t("admin.management.hidden")}</span>
@@ -171,9 +172,13 @@ export function ProductManagementPage({ navigate }) {
                           setSavingId(product.id);
                           try {
                             const updated = await updateAdminProduct(product.id, activeForm, token);
+                            const finalProduct =
+                              canPublish && updated.onShelf !== activeForm.onShelf
+                                ? await updateAdminProductShelf(product.id, activeForm.onShelf, token)
+                                : updated;
                             setProductsState((current) => ({
                               ...current,
-                              products: current.products.map((item) => (item.id === product.id ? updated : item))
+                              products: current.products.map((item) => (item.id === product.id ? finalProduct : item))
                             }));
                             setEditingId(null);
                             setForm(null);
@@ -214,6 +219,34 @@ export function ProductManagementPage({ navigate }) {
                       >
                         {t("admin.management.edit")}
                       </button>
+                      {canPublish ? (
+                        <button
+                          className="secondary-button button-small"
+                          type="button"
+                          onClick={async () => {
+                            try {
+                              const updated = await updateAdminProductShelf(product.id, !product.onShelf, token);
+                              setProductsState((current) => ({
+                                ...current,
+                                products: current.products.map((item) => (item.id === product.id ? updated : item))
+                              }));
+                              pushNotification({
+                                tone: "success",
+                                title: t("admin.management.updated.title"),
+                                message: t("admin.management.updated.body")
+                              });
+                            } catch (error) {
+                              pushNotification({
+                                tone: "error",
+                                title: t("admin.management.updateFailed"),
+                                message: getReadableErrorMessage(error, fallbackErrorMessage)
+                              });
+                            }
+                          }}
+                        >
+                          {product.onShelf ? t("admin.management.takeDown") : t("admin.management.publish")}
+                        </button>
+                      ) : null}
                       <button
                         className="text-button management-delete"
                         disabled={deletingId === product.id}

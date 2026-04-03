@@ -5,7 +5,8 @@
   "description": "Apple Lite storefront frontend for the mall platform",
   "scripts": {
     "start": "webpack serve --mode development",
-    "build": "webpack --mode production"
+    "build": "webpack --mode production",
+    "test": "jest --coverage --runInBand"
   },
   "dependencies": {
     "react": "^19.2.0",
@@ -16,9 +17,16 @@
     "@babel/preset-env": "^7.29.2",
     "@babel/preset-react": "^7.28.5",
     "@pmmmwh/react-refresh-webpack-plugin": "^0.6.2",
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.2",
+    "@testing-library/user-event": "^14.6.1",
+    "babel-jest": "^30.3.0",
     "babel-loader": "^10.1.1",
     "css-loader": "^7.1.4",
     "html-webpack-plugin": "^5.6.6",
+    "identity-obj-proxy": "^3.0.0",
+    "jest": "^30.3.0",
+    "jest-environment-jsdom": "^30.3.0",
     "react-refresh": "^0.18.0",
     "sass": "^1.98.0",
     "sass-loader": "^16.0.7",

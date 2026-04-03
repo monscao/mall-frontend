@@ -6,12 +6,20 @@ import { formatCurrency } from "shared/utils/format";
 import { SafeImage } from "components/SafeImage";
 
 export function CartPage({ navigate }) {
-  const { items, subtotal, removeItem, updateQuantity, clearCart } = useCart();
+  const { cartReady, items, subtotal, removeItem, updateQuantity, clearCart } = useCart();
   const { isAuthenticated } = useAuth();
   const { locale, t } = useI18n();
   const { pushNotification } = useNotification();
   const shipping = items.length > 0 ? 18 : 0;
   const total = subtotal + shipping;
+
+  if (!cartReady) {
+    return (
+      <section className="panel empty-cart">
+        <p>{t("cart.syncing")}</p>
+      </section>
+    );
+  }
 
   return (
     <div className="page-stack">
@@ -25,8 +33,8 @@ export function CartPage({ navigate }) {
           <button
             className="text-button"
             type="button"
-            onClick={() => {
-              clearCart();
+            onClick={async () => {
+              await clearCart();
               pushNotification({
                 tone: "success",
                 title: t("cart.cleared.title"),
@@ -67,15 +75,15 @@ export function CartPage({ navigate }) {
                       min="1"
                       type="number"
                       value={item.quantity}
-                      onChange={(event) => updateQuantity(item.skuCode, Number(event.target.value))}
+                      onChange={async (event) => updateQuantity(item.skuCode, Number(event.target.value))}
                     />
                   </label>
                   <strong>{formatCurrency(Number(item.salePrice) * item.quantity, locale)}</strong>
                   <button
                     className="text-button"
                     type="button"
-                    onClick={() => {
-                      removeItem(item.skuCode);
+                    onClick={async () => {
+                      await removeItem(item.skuCode);
                       pushNotification({
                         tone: "info",
                         title: t("cart.removed.title"),

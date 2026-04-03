@@ -275,28 +275,36 @@ export function ProductPage({ navigate, slug }) {
             <button
               className="primary-button"
               type="button"
-              onClick={() => {
+              onClick={async () => {
                 if (!selectedSku) {
                   return;
                 }
 
-                addItem({
-                  skuCode: selectedSku.skuCode,
-                  productSlug: product.slug,
-                  productName: product.name,
-                  skuName: selectedSku.name,
-                  salePrice: selectedSku.salePrice,
-                  marketPrice: selectedSku.marketPrice,
-                  stock: selectedSku.stock,
-                  coverImage: selectedSku.coverImage || product.coverImage,
-                  quantity: 1
-                });
-                pushNotification({
-                  tone: "success",
-                  title: t("product.added.title"),
-                  message: t("product.added.body", { name: product.name })
-                });
-                navigate("/cart");
+                try {
+                  await addItem({
+                    skuCode: selectedSku.skuCode,
+                    productSlug: product.slug,
+                    productName: product.name,
+                    skuName: selectedSku.name,
+                    salePrice: selectedSku.salePrice,
+                    marketPrice: selectedSku.marketPrice,
+                    stock: selectedSku.stock,
+                    coverImage: selectedSku.coverImage || product.coverImage,
+                    quantity: 1
+                  });
+                  pushNotification({
+                    tone: "success",
+                    title: t("product.added.title"),
+                    message: t("product.added.body", { name: product.name })
+                  });
+                  navigate("/cart");
+                } catch (error) {
+                  pushNotification({
+                    tone: "error",
+                    title: t("product.error.title"),
+                    message: getReadableErrorMessage(error, t)
+                  });
+                }
               }}
             >
               <IconCart className="button-icon-svg" />

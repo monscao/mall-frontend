@@ -2,12 +2,12 @@ import { useEffect, useState } from "react";
 import { SectionState } from "components/SectionState";
 import { useAuth } from "context/AuthContext";
 import { useI18n } from "context/I18nContext";
-import { fetchOrderDetail, getErrorTone, getReadableErrorMessage } from "services/api";
+import { cancelOrder, fetchAdminOrderDetail, fetchOrderDetail, getErrorTone, getReadableErrorMessage, updateOrderStatus } from "services/api";
 import { formatCurrency } from "shared/utils/format";
 import { SafeImage } from "components/SafeImage";
 
 export function OrderDetailPage({ navigate, orderId }) {
-  const { isAuthenticated, session } = useAuth();
+  const { hasPermission, isAuthenticated, session } = useAuth();
   const { locale, t } = useI18n();
   const [state, setState] = useState({
     loading: true,
@@ -22,7 +22,11 @@ export function OrderDetailPage({ navigate, orderId }) {
     }
 
     let active = true;
-    fetchOrderDetail(orderId, session.token)
+    const request = hasPermission("ORDER:MANAGE")
+      ? fetchAdminOrderDetail(orderId, session.token)
+      : fetchOrderDetail(orderId, session.token);
+
+    request
       .then((order) => {
         if (active) {
           setState({ loading: false, order, error: "" });
@@ -37,7 +41,7 @@ export function OrderDetailPage({ navigate, orderId }) {
     return () => {
       active = false;
     };
-  }, [isAuthenticated, orderId, session]);
+  }, [hasPermission, isAuthenticated, orderId, session]);
 
   if (!isAuthenticated) {
     return (
@@ -80,6 +84,44 @@ export function OrderDetailPage({ navigate, orderId }) {
         <span>{t("order.detail.eyebrow")}</span>
         <h2>{order.orderNo}</h2>
         <p>{t(`orders.status.${order.status}`) || order.status}</p>
+        <div className="management-actions">
+          {order.customerActionable && !hasPermission("ORDER:MANAGE") ? (
+            <button
+              className="text-button"
+              type="button"
+              onClick={async () => {
+                try {
+                  const updated = await cancelOrder(order.id, session.token);
+                  setState((current) => ({ ...current, order: updated }));
+                } catch (error) {
+                  setState((current) => ({ ...current, error }));
+                }
+              }}
+            >
+              {t("orders.cancel")}
+            </button>
+          ) : null}
+          {hasPermission("ORDER:MANAGE")
+            ? ["PAID", "PROCESSING", "SHIPPED", "COMPLETED", "CANCELLED"].map((status) => (
+                <button
+                  className="text-button"
+                  key={status}
+                  type="button"
+                  disabled={order.status === status}
+                  onClick={async () => {
+                    try {
+                      const updated = await updateOrderStatus(order.id, status, session.token);
+                      setState((current) => ({ ...current, order: updated }));
+                    } catch (error) {
+                      setState((current) => ({ ...current, error }));
+                    }
+                  }}
+                >
+                  {t(`orders.status.${status}`) || status}
+                </button>
+              ))
+            : null}
+        </div>
       </section>
 
       <section className="order-detail-layout">

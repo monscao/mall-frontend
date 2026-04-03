@@ -2,6 +2,17 @@ const jsonHeaders = {
   "Content-Type": "application/json"
 };
 
+const AUTH_EXPIRED_EVENT = "mall-frontend-auth-expired";
+
+function withAuth(token, headers = {}) {
+  return token
+    ? {
+        ...headers,
+        Authorization: `Bearer ${token}`
+      }
+    : headers;
+}
+
 function createApiError(message, status, code, rawMessage) {
   const error = new Error(message);
   error.status = status;
@@ -82,6 +93,8 @@ export function getReadableErrorMessage(error, t) {
       return t("error.timeout.body");
     case "AUTH_REQUIRED":
       return t("error.auth.body");
+    case "FORBIDDEN":
+      return t("error.forbidden.body");
     case "NOT_FOUND":
       return t("error.notFound.body");
     case "SERVICE_UNAVAILABLE":
@@ -141,6 +154,10 @@ async function apiRequest(path, options = {}) {
       data = null;
     }
 
+    if (response.status === 401 && options.headers?.Authorization && typeof window !== "undefined") {
+      window.dispatchEvent(new CustomEvent(AUTH_EXPIRED_EVENT));
+    }
+
     throw normalizeHttpError(response, data, "Request failed");
   }
 
@@ -174,9 +191,7 @@ export function fetchProductDetail(slug) {
 
 export function fetchAdminProducts(token) {
   return apiRequest("/api/catalog/admin/products", {
-    headers: {
-      Authorization: `Bearer ${token}`
-    }
+    headers: withAuth(token)
   });
 }
 
@@ -184,9 +199,7 @@ export function createProduct(payload, token) {
   return apiRequest("/api/catalog/admin/products", {
     method: "POST",
     body: JSON.stringify(payload),
-    headers: {
-      Authorization: `Bearer ${token}`
-    }
+    headers: withAuth(token)
   });
 }
 
@@ -194,9 +207,15 @@ export function updateAdminProduct(productId, payload, token) {
   return apiRequest(`/api/catalog/admin/products/${productId}`, {
     method: "PUT",
     body: JSON.stringify(payload),
-    headers: {
-      Authorization: `Bearer ${token}`
-    }
+    headers: withAuth(token)
+  });
+}
+
+export function updateAdminProductShelf(productId, onShelf, token) {
+  return apiRequest(`/api/catalog/admin/products/${productId}/shelf`, {
+    method: "PUT",
+    body: JSON.stringify({ onShelf }),
+    headers: withAuth(token)
   });
 }
 
@@ -206,9 +225,7 @@ export async function deleteAdminProduct(productId, token) {
   try {
     response = await fetch(`/api/catalog/admin/products/${productId}`, {
       method: "DELETE",
-      headers: {
-        Authorization: `Bearer ${token}`
-      }
+      headers: withAuth(token)
     });
   } catch (error) {
     throw createApiError("Network unavailable", 0, "NETWORK_UNAVAILABLE", error.message);
@@ -236,9 +253,7 @@ export async function uploadProductImage(file, token) {
   try {
     response = await fetch("/api/catalog/admin/uploads", {
       method: "POST",
-      headers: {
-        Authorization: `Bearer ${token}`
-      },
+      headers: withAuth(token),
       body: formData
     });
   } catch (error) {
@@ -276,34 +291,123 @@ export function registerUser(payload) {
 
 export function fetchCurrentUser(token) {
   return apiRequest("/api/auth/me", {
-    headers: {
-      Authorization: `Bearer ${token}`
-    }
+    headers: withAuth(token)
   });
+}
+
+export function fetchCart(token) {
+  return apiRequest("/api/cart", {
+    headers: withAuth(token)
+  });
+}
+
+export function syncCart(items, token) {
+  return apiRequest("/api/cart", {
+    method: "PUT",
+    body: JSON.stringify({ items }),
+    headers: withAuth(token)
+  });
+}
+
+export async function clearCartRequest(token) {
+  let response;
+
+  try {
+    response = await fetch("/api/cart", {
+      method: "DELETE",
+      headers: withAuth(token)
+    });
+  } catch (error) {
+    throw createApiError("Network unavailable", 0, "NETWORK_UNAVAILABLE", error.message);
+  }
+
+  if (!response.ok) {
+    let data;
+
+    try {
+      data = await response.json();
+    } catch (_error) {
+      data = null;
+    }
+
+    throw normalizeHttpError(response, data, "Request failed");
+  }
+
+  return response.json();
+}
+
+export function normalizeCartItemsForSync(items = []) {
+  return items.map((item) => ({
+    skuCode: item.skuCode,
+    quantity: Number(item.quantity) || 1
+  }));
 }
 
 export function createOrder(payload, token) {
   return apiRequest("/api/orders", {
     method: "POST",
     body: JSON.stringify(payload),
-    headers: {
-      Authorization: `Bearer ${token}`
-    }
+    headers: withAuth(token)
   });
 }
 
 export function fetchOrders(token) {
   return apiRequest("/api/orders", {
-    headers: {
-      Authorization: `Bearer ${token}`
-    }
+    headers: withAuth(token)
+  });
+}
+
+export function fetchAdminOrders(token) {
+  return apiRequest("/api/orders/admin", {
+    headers: withAuth(token)
   });
 }
 
 export function fetchOrderDetail(orderId, token) {
   return apiRequest(`/api/orders/${orderId}`, {
-    headers: {
-      Authorization: `Bearer ${token}`
-    }
+    headers: withAuth(token)
   });
 }
+
+export function fetchAdminOrderDetail(orderId, token) {
+  return apiRequest(`/api/orders/admin/${orderId}`, {
+    headers: withAuth(token)
+  });
+}
+
+export async function cancelOrder(orderId, token) {
+  let response;
+
+  try {
+    response = await fetch(`/api/orders/${orderId}`, {
+      method: "DELETE",
+      headers: withAuth(token)
+    });
+  } catch (error) {
+    throw createApiError("Network unavailable", 0, "NETWORK_UNAVAILABLE", error.message);
+  }
+
+  if (!response.ok) {
+    let data;
+
+    try {
+      data = await response.json();
+    } catch (_error) {
+      data = null;
+    }
+
+    throw normalizeHttpError(response, data, "Request failed");
+  }
+
+  return response.json();
+}
+
+export function updateOrderStatus(orderId, status, token) {
+  return apiRequest(`/api/orders/admin/${orderId}/status`, {
+    method: "PUT",
+    body: JSON.stringify({ status }),
+    headers: withAuth(token)
+  });
+}
+
+export { AUTH_EXPIRED_EVENT };

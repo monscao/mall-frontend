@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
-import { fetchCurrentUser, loginUser, registerUser } from "services/api";
+import { AUTH_EXPIRED_EVENT, fetchCurrentUser, loginUser, registerUser } from "services/api";
 
 const AuthContext = createContext(null);
 const AUTH_STORAGE_KEY = "mall-frontend-auth";
@@ -55,11 +55,28 @@ export function AuthProvider({ children }) {
     };
   }, []);
 
+  useEffect(() => {
+    function handleAuthExpired() {
+      setSession(null);
+      window.localStorage.removeItem(AUTH_STORAGE_KEY);
+      setAuthReady(true);
+    }
+
+    window.addEventListener(AUTH_EXPIRED_EVENT, handleAuthExpired);
+
+    return () => {
+      window.removeEventListener(AUTH_EXPIRED_EVENT, handleAuthExpired);
+    };
+  }, []);
+
   const value = useMemo(
     () => ({
       authReady,
       isAuthenticated: Boolean(session?.token),
       isAdmin: Boolean(session?.currentUser?.roleCodes?.includes("ADMIN") || session?.roleCodes?.includes("ADMIN")),
+      hasPermission(permissionCode) {
+        return Boolean(session?.currentUser?.permissionCodes?.includes(permissionCode));
+      },
       session,
       async login(payload) {
         const response = await loginUser(payload);
