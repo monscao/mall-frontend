@@ -5,7 +5,7 @@ import { useNotification } from "context/NotificationContext";
 import { useTheme } from "context/ThemeContext";
 import { createCatalogPath } from "shared/utils/navigation";
 import { AppLink } from "components/AppLink";
-import { IconGlobe, IconMoon, IconSun } from "components/Icons";
+import { IconClose, IconGlobe, IconMenu, IconMoon, IconSun } from "components/Icons";
 
 export function Header({ currentPath, currentSearch, navigate }) {
   const { isAuthenticated, isAdmin, logout, session } = useAuth();
@@ -14,6 +14,7 @@ export function Header({ currentPath, currentSearch, navigate }) {
   const { theme, toggleTheme } = useTheme();
   const [languageOpen, setLanguageOpen] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const languageRef = useRef(null);
   const userMenuRef = useRef(null);
 
@@ -45,6 +46,12 @@ export function Header({ currentPath, currentSearch, navigate }) {
     };
   }, []);
 
+  useEffect(() => {
+    setMobileMenuOpen(false);
+    setLanguageOpen(false);
+    setUserMenuOpen(false);
+  }, [currentPath, currentSearch]);
+
   return (
     <header className="site-header">
       <div className="header-inner header-inner-minimal">
@@ -55,20 +62,31 @@ export function Header({ currentPath, currentSearch, navigate }) {
           </div>
         </AppLink>
 
-        <nav className="header-nav header-nav-minimal">
+        <button
+          aria-expanded={mobileMenuOpen}
+          aria-label={mobileMenuOpen ? t("header.mobile.close") : t("header.mobile.open")}
+          className="header-mobile-toggle"
+          type="button"
+          onClick={() => setMobileMenuOpen((current) => !current)}
+        >
+          {mobileMenuOpen ? <IconClose className="button-icon-svg" /> : <IconMenu className="button-icon-svg" />}
+        </button>
+
+        <nav className={`header-nav header-nav-minimal ${mobileMenuOpen ? "is-open" : ""}`}>
           {navItems.map((item) => (
             <AppLink
               className={`nav-link ${item.isActive ? "is-active" : ""}`}
               key={item.to}
               navigate={navigate}
               to={item.to}
+              onClick={() => setMobileMenuOpen(false)}
             >
               {item.label}
             </AppLink>
           ))}
         </nav>
 
-        <div className="header-actions header-actions-minimal">
+        <div className={`header-actions header-actions-minimal ${mobileMenuOpen ? "is-open" : ""}`}>
           {isAuthenticated ? (
             <div
               className="user-menu"
@@ -84,18 +102,30 @@ export function Header({ currentPath, currentSearch, navigate }) {
                 {session?.currentUser?.username || session?.username}
               </button>
               <div className={`user-menu-panel ${userMenuOpen ? "is-open" : ""}`}>
-                <button className="user-menu-item" type="button" onClick={() => navigate("/account")}>
+                <button className="user-menu-item" type="button" onClick={() => {
+                  setMobileMenuOpen(false);
+                  navigate("/account");
+                }}>
                   {t("header.menu.profile")}
                 </button>
-                <button className="user-menu-item" type="button" onClick={() => navigate("/orders")}>
+                <button className="user-menu-item" type="button" onClick={() => {
+                  setMobileMenuOpen(false);
+                  navigate("/orders");
+                }}>
                   {t("nav.orders")}
                 </button>
                 {isAdmin ? (
                   <>
-                    <button className="user-menu-item" type="button" onClick={() => navigate("/admin/products")}>
+                    <button className="user-menu-item" type="button" onClick={() => {
+                      setMobileMenuOpen(false);
+                      navigate("/admin/products");
+                    }}>
                       {t("header.menu.productManagement")}
                     </button>
-                    <button className="user-menu-item" type="button" onClick={() => navigate("/admin/products/new")}>
+                    <button className="user-menu-item" type="button" onClick={() => {
+                      setMobileMenuOpen(false);
+                      navigate("/admin/products/new");
+                    }}>
                       {t("header.menu.addProduct")}
                     </button>
                   </>
@@ -105,6 +135,7 @@ export function Header({ currentPath, currentSearch, navigate }) {
                   type="button"
                   onClick={() => {
                     setUserMenuOpen(false);
+                    setMobileMenuOpen(false);
                     logout();
                     navigate("/");
                     pushNotification({
@@ -120,10 +151,10 @@ export function Header({ currentPath, currentSearch, navigate }) {
             </div>
           ) : (
             <div className="auth-actions auth-actions-minimal">
-              <AppLink className="text-link" navigate={navigate} to="/login">
+              <AppLink className="text-link" navigate={navigate} to="/login" onClick={() => setMobileMenuOpen(false)}>
                 {t("auth.login")}
               </AppLink>
-              <AppLink className="primary-button button-small" navigate={navigate} to="/register">
+              <AppLink className="primary-button button-small" navigate={navigate} to="/register" onClick={() => setMobileMenuOpen(false)}>
                 {t("auth.register")}
               </AppLink>
             </div>

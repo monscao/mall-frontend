@@ -117,7 +117,7 @@ export function ProductManagementPage({ navigate }) {
 
             return (
               <article className="management-row" key={product.id}>
-                <div className="management-product-cell">
+                <div className="management-product-cell" data-label={t("admin.management.table.product")}>
                   <SafeImage alt={product.name} src={product.coverImage} />
                   <div>
                     <strong>{product.name}</strong>
@@ -125,7 +125,7 @@ export function ProductManagementPage({ navigate }) {
                   </div>
                 </div>
 
-                <div className="management-form-field">
+                <div className="management-form-field" data-label={t("admin.management.table.category")}>
                   {isEditing ? (
                     <select value={activeForm.categoryCode} onChange={(event) => setForm((current) => ({ ...current, categoryCode: event.target.value }))}>
                       {categoryOptions.map((option) => (
@@ -139,7 +139,7 @@ export function ProductManagementPage({ navigate }) {
                   )}
                 </div>
 
-                <div className="management-form-field">
+                <div className="management-form-field" data-label={t("admin.management.table.price")}>
                   {isEditing ? (
                     <div className="management-price-grid">
                       <input value={activeForm.priceFrom} onChange={(event) => setForm((current) => ({ ...current, priceFrom: event.target.value }))} />
@@ -150,7 +150,7 @@ export function ProductManagementPage({ navigate }) {
                   )}
                 </div>
 
-                <div className="management-form-field">
+                <div className="management-form-field" data-label={t("admin.management.table.status")}>
                   {isEditing ? (
                     <div className="management-toggle-grid">
                       <label><input checked={activeForm.featured} type="checkbox" onChange={(event) => setForm((current) => ({ ...current, featured: event.target.checked }))} /> {t("admin.management.featured")}</label>
@@ -161,7 +161,7 @@ export function ProductManagementPage({ navigate }) {
                   )}
                 </div>
 
-                <div className="management-actions">
+                <div className="management-actions" data-label={t("admin.management.table.actions")}>
                   {isEditing ? (
                     <>
                       <button
