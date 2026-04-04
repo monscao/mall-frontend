@@ -81,17 +81,17 @@ export function Header({ currentPath, currentSearch, navigate }) {
             <nav className="header-nav header-nav-minimal">
               {navItems.map((item) => (
                 <AppLink
-                  className={`nav-link ${item.isActive ? "is-active" : ""}`}
-                  key={item.to}
-                  navigate={navigate}
-                  to={item.to}
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  <span>{item.label}</span>
-                  <IconArrowRight className="button-icon-svg" />
-                </AppLink>
-              ))}
-            </nav>
+                className={`nav-link ${item.isActive ? "is-active" : ""}`}
+                key={item.to}
+                navigate={navigate}
+                to={item.to}
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                <span className="nav-link-label">{item.label}</span>
+                <IconArrowRight className="button-icon-svg nav-link-arrow" />
+              </AppLink>
+            ))}
+          </nav>
           </div>
 
           <div className="header-actions header-actions-minimal">
