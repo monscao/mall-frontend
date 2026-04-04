@@ -114,6 +114,8 @@ export function HomePage({ navigate }) {
             type="button"
             onClick={() => navigate(createCatalogPath(heroSecondaryCategory.code, "featured"))}
           >
+            <SafeImage alt={heroSecondaryCategory.name} src={heroSecondaryCategory.bannerImage} />
+            <div className="hero-secondary-overlay" />
             <div className="hero-secondary-copy">
               <span className="eyebrow">{heroSecondaryCategory.code}</span>
               <strong>{resolveText(heroSecondaryCategory.name)}</strong>
