@@ -13,9 +13,9 @@
   --accent-strong: #2c7fe0;
   --success: #1f7a4d;
   --shadow: 0 30px 80px rgba(0, 0, 0, 0.35);
-  --radius-xl: 28px;
-  --radius-lg: 20px;
-  --radius-md: 16px;
+  --radius-xl: 24px;
+  --radius-lg: 18px;
+  --radius-md: 14px;
   --container: 1180px;
   --page-gutter: clamp(18px, 3.6vw, 38px);
   --page-bg-color: #06101b;
@@ -125,7 +125,7 @@ img {
   position: sticky;
   top: 0;
   z-index: 80;
-  padding: 18px 0 0;
+  padding: 14px 0 0;
 }
 
 .header-inner,
@@ -139,20 +139,20 @@ img {
   display: grid;
   grid-template-columns: auto 1fr auto;
   align-items: center;
-  gap: 20px;
-  padding: 16px 20px;
+  gap: 16px;
+  padding: 14px 16px;
   border: 1px solid var(--panel-border);
-  border-radius: 999px;
+  border-radius: 22px;
   background: var(--header-bg);
   backdrop-filter: blur(22px);
-  box-shadow: 0 12px 40px var(--panel-glow);
+  box-shadow: 0 14px 34px var(--panel-glow);
   position: relative;
   overflow: visible;
 }
 
 .header-inner-minimal {
   grid-template-columns: auto minmax(0, 1fr) auto;
-  gap: 20px;
+  gap: 16px;
 }
 
 .header-mobile-panel {
@@ -164,7 +164,7 @@ img {
   display: inline-grid;
   grid-template-columns: auto 1fr;
   align-items: center;
-  gap: 14px;
+  gap: 12px;
 }
 
 .footer-brand {
@@ -174,9 +174,9 @@ img {
 .brand-mark {
   display: grid;
   place-items: center;
-  width: 40px;
-  height: 40px;
-  border-radius: 15px;
+  width: 42px;
+  height: 42px;
+  border-radius: 14px;
   background: linear-gradient(135deg, #86b1f4, #f29c74);
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.18),
@@ -195,7 +195,7 @@ img {
 
 .brand-lockup strong {
   line-height: 1;
-  font-size: 0.98rem;
+  font-size: 1rem;
   font-weight: 700;
   letter-spacing: 0.01em;
 }
@@ -259,8 +259,8 @@ img {
 
 .nav-link,
 .filter-chip {
-  padding: 9px 14px;
-  border-radius: 999px;
+  padding: 10px 14px;
+  border-radius: 14px;
   color: var(--muted);
 }
 
@@ -282,7 +282,7 @@ img {
   align-items: center;
   flex-wrap: wrap;
   padding: 10px 14px;
-  border-radius: 999px;
+  border-radius: 14px;
   background: var(--soft-fill);
 }
 
@@ -312,7 +312,7 @@ img {
   gap: 8px;
   min-height: 40px;
   padding: 0 14px;
-  border-radius: 999px;
+  border-radius: 14px;
   background: var(--soft-fill);
   color: var(--text);
   cursor: pointer;
@@ -404,11 +404,11 @@ img {
 
 .floating-actions {
   position: fixed;
-  right: 24px;
-  bottom: 24px;
+  right: 20px;
+  bottom: 20px;
   z-index: 30;
   display: grid;
-  gap: 12px;
+  gap: 10px;
   justify-items: end;
 }
 
@@ -418,9 +418,9 @@ img {
   align-items: center;
   justify-content: center;
   gap: 10px;
-  min-height: 52px;
-  padding: 0 16px;
-  border-radius: 999px;
+  min-height: 48px;
+  padding: 0 14px;
+  border-radius: 18px;
   backdrop-filter: blur(18px);
   box-shadow: 0 18px 36px rgba(6, 16, 27, 0.34);
   transition: transform 180ms ease, box-shadow 180ms ease, background 180ms ease, border-color 180ms ease;
@@ -428,10 +428,10 @@ img {
 }
 
 .floating-cart-button {
-  background: linear-gradient(135deg, rgba(134, 177, 244, 0.98), rgba(242, 156, 116, 0.96));
-  color: #0f1728;
-  border: 1px solid rgba(240, 154, 118, 0.34);
-  box-shadow: 0 18px 36px rgba(232, 131, 88, 0.28);
+  background: color-mix(in srgb, var(--surface-strong) 92%, #1b3658 8%);
+  color: var(--text);
+  border: 1px solid var(--line);
+  box-shadow: 0 18px 36px rgba(6, 16, 27, 0.34);
 }
 
 .floating-cart-button span {
@@ -441,29 +441,29 @@ img {
   height: 24px;
   padding: 0 7px;
   border-radius: 999px;
-  background: rgba(15, 23, 40, 0.16);
+  background: color-mix(in srgb, var(--accent) 18%, transparent);
 }
 
 .floating-mini-button {
-  width: 48px;
-  min-height: 48px;
+  width: 44px;
+  min-height: 44px;
   padding: 0;
-  border: 1px solid rgba(240, 154, 118, 0.34);
-  background: linear-gradient(135deg, rgba(134, 177, 244, 0.95), rgba(242, 156, 116, 0.94));
-  color: #ffffff;
+  border: 1px solid var(--line);
+  background: color-mix(in srgb, var(--surface-strong) 92%, #1b3658 8%);
+  color: var(--text);
 }
 
 html[data-theme="light"] .floating-mini-button {
-  background: linear-gradient(135deg, rgba(134, 177, 244, 0.95), rgba(242, 156, 116, 0.94));
-  color: #ffffff;
-  border-color: rgba(240, 154, 118, 0.46);
+  background: color-mix(in srgb, var(--surface-strong) 92%, #1b3658 8%);
+  color: var(--text-inverse);
+  border-color: var(--line);
 }
 
 html[data-theme="light"] .floating-cart-button {
-  background: linear-gradient(135deg, rgba(134, 177, 244, 0.98), rgba(242, 156, 116, 0.96));
+  background: rgba(19, 32, 45, 0.92);
   color: #ffffff;
-  border: 1px solid rgba(240, 154, 118, 0.34);
-  box-shadow: 0 18px 36px rgba(222, 141, 108, 0.28);
+  border: 1px solid rgba(19, 32, 45, 0.18);
+  box-shadow: 0 18px 36px rgba(70, 79, 102, 0.24);
 }
 
 html[data-theme="light"] .floating-cart-button span {
@@ -473,17 +473,17 @@ html[data-theme="light"] .floating-cart-button span {
 .floating-cart-button:hover,
 .floating-cart-button:focus-visible {
   transform: translateY(-2px);
-  background: linear-gradient(135deg, rgba(122, 169, 242, 0.98), rgba(255, 142, 95, 0.97));
-  border-color: rgba(255, 140, 92, 0.46);
-  box-shadow: 0 24px 44px rgba(232, 131, 88, 0.34);
+  background: color-mix(in srgb, var(--surface-strong) 94%, var(--accent) 6%);
+  border-color: color-mix(in srgb, var(--accent) 35%, var(--line));
+  box-shadow: 0 22px 40px rgba(6, 16, 27, 0.32);
 }
 
 .floating-mini-button:hover,
 .floating-mini-button:focus-visible {
   transform: translateY(-2px);
-  background: linear-gradient(135deg, rgba(122, 169, 242, 0.96), rgba(255, 142, 95, 0.95));
-  border-color: rgba(255, 140, 92, 0.46);
-  box-shadow: 0 22px 42px rgba(232, 131, 88, 0.3);
+  background: color-mix(in srgb, var(--surface-strong) 94%, var(--accent) 6%);
+  border-color: color-mix(in srgb, var(--accent) 35%, var(--line));
+  box-shadow: 0 20px 36px rgba(6, 16, 27, 0.28);
 }
 
 html[data-theme="light"] .floating-cart-button:hover,
@@ -532,13 +532,13 @@ html[data-theme="light"] .floating-mini-button:focus-visible {
 .primary-button,
 .secondary-button {
   padding: 12px 18px;
-  border-radius: 999px;
+  border-radius: 14px;
 }
 
 .primary-button {
-  background: linear-gradient(135deg, var(--accent), #ff8b58);
+  background: linear-gradient(135deg, var(--accent), color-mix(in srgb, var(--accent) 70%, #ff8b58 30%));
   color: var(--text-inverse);
-  box-shadow: 0 12px 28px rgba(255, 106, 61, 0.26);
+  box-shadow: 0 12px 24px rgba(31, 106, 198, 0.24);
 }
 
 .secondary-button {
@@ -598,7 +598,7 @@ html[data-theme="light"] .floating-mini-button:focus-visible {
   display: grid;
   grid-template-columns: 1.08fr 0.92fr;
   gap: 24px;
-  min-height: min(72vh, 720px);
+  min-height: min(68vh, 680px);
   padding: clamp(18px, 2.8vw, 28px);
   background:
     radial-gradient(circle at top, color-mix(in srgb, var(--accent) 22%, transparent), transparent 28%),
@@ -648,8 +648,8 @@ html[data-theme="light"] .floating-mini-button:focus-visible {
 
 .hero-copy h1 {
   max-width: 11ch;
-  font-size: clamp(2.9rem, 8.6vw, 5.9rem);
-  line-height: 0.92;
+  font-size: clamp(2.7rem, 7.8vw, 5.2rem);
+  line-height: 0.96;
 }
 
 .hero-copy p,
@@ -751,6 +751,8 @@ html[data-theme="light"] .floating-mini-button:focus-visible {
 .section-state h3,
 .empty-cart h3 {
   margin: 0;
+  line-height: 1.14;
+  word-break: break-word;
 }
 
 .product-grid {
@@ -784,11 +786,13 @@ html[data-theme="light"] .floating-mini-button:focus-visible {
   min-height: 100%;
   padding: 12px 14px 14px;
   gap: 8px;
+  min-width: 0;
 }
 
 .product-copy {
   align-content: start;
   gap: 8px;
+  min-width: 0;
 }
 
 .product-copy h3 {
@@ -800,6 +804,7 @@ html[data-theme="light"] .floating-mini-button:focus-visible {
   min-height: 2.8em;
   margin: 0;
   line-height: 1.45;
+  word-break: break-word;
 }
 
 .tag-row {
@@ -875,7 +880,7 @@ html[data-theme="light"] .floating-mini-button:focus-visible {
 
 .tag-pill {
   padding: 8px 12px;
-  border-radius: 999px;
+  border-radius: 12px;
   background: var(--soft-fill);
   font-size: 0.9rem;
 }
@@ -2606,7 +2611,7 @@ html[data-theme="light"] .floating-top-label {
     grid-template-columns: auto auto;
     align-items: center;
     justify-content: space-between;
-    border-radius: 28px;
+    border-radius: 20px;
   }
 
   .header-inner.is-mobile-open {
@@ -2630,15 +2635,13 @@ html[data-theme="light"] .floating-top-label {
     left: 0;
     right: 0;
     display: none;
-    gap: 12px;
-    padding: 14px;
+    gap: 10px;
+    padding: 12px;
     border: 1px solid var(--panel-border);
-    border-radius: 24px;
-    background:
-      linear-gradient(180deg, color-mix(in srgb, var(--header-bg) 94%, #0a1220 6%), color-mix(in srgb, var(--surface) 98%, transparent)),
-      var(--header-bg);
+    border-radius: 18px;
+    background: color-mix(in srgb, var(--surface-strong) 94%, transparent);
     backdrop-filter: blur(24px);
-    box-shadow: 0 18px 44px rgba(4, 12, 24, 0.34);
+    box-shadow: 0 18px 34px rgba(4, 12, 24, 0.28);
     z-index: 95;
   }
 
@@ -2657,8 +2660,8 @@ html[data-theme="light"] .floating-top-label {
 
   .nav-link {
     width: 100%;
-    justify-content: center;
-    text-align: center;
+    justify-content: flex-start;
+    text-align: left;
   }
 
   .header-actions-minimal {
@@ -2733,8 +2736,8 @@ html[data-theme="light"] .floating-top-label {
 
   .user-menu-item,
   .language-menu-item {
-    justify-content: center;
-    text-align: center;
+    justify-content: flex-start;
+    text-align: left;
   }
 }
 
@@ -2812,9 +2815,9 @@ html[data-theme="light"] .floating-top-label {
     grid-template-columns: minmax(0, 1fr) auto;
     align-items: center;
     width: min(calc(100% - 20px), var(--container));
-    gap: 14px;
-    padding: 14px;
-    border-radius: 22px;
+    gap: 12px;
+    padding: 12px;
+    border-radius: 18px;
   }
 
   .brand-lockup {
@@ -2825,7 +2828,7 @@ html[data-theme="light"] .floating-top-label {
 
   .brand-lockup strong {
     white-space: nowrap;
-    font-size: 0.92rem;
+    font-size: 0.88rem;
   }
 
   .header-mobile-toggle {
@@ -2833,10 +2836,10 @@ html[data-theme="light"] .floating-top-label {
   }
 
   .header-mobile-panel {
-    gap: 10px;
+    gap: 8px;
     top: calc(100% + 8px);
-    padding: 12px;
-    border-radius: 22px;
+    padding: 10px;
+    border-radius: 16px;
   }
 
   .header-actions-minimal {
@@ -2859,14 +2862,14 @@ html[data-theme="light"] .floating-top-label {
   .upload-block,
   .admin-sku-card,
   .management-table-shell {
-    border-radius: 24px;
+    border-radius: 20px;
   }
 
   .hero-panel {
     min-height: auto;
     grid-template-columns: 1fr;
-    gap: 18px;
-    padding: 22px 18px;
+    gap: 16px;
+    padding: 18px 16px;
   }
 
   .hero-cta {
@@ -2886,8 +2889,8 @@ html[data-theme="light"] .floating-top-label {
 
   .hero-copy h1 {
     max-width: none;
-    font-size: clamp(1.9rem, 8vw, 2.8rem);
-    line-height: 1.02;
+    font-size: clamp(2rem, 8.2vw, 2.8rem);
+    line-height: 1.04;
     letter-spacing: -0.03em;
     word-break: break-word;
   }
@@ -2948,7 +2951,7 @@ html[data-theme="light"] .floating-top-label {
 
   .footer-links-expanded {
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 16px;
+    gap: 14px;
   }
 
   .catalog-page-toolbar {
@@ -3013,7 +3016,7 @@ html[data-theme="light"] .floating-top-label {
   .footer-bottom-right {
     width: 100%;
     display: grid;
-    grid-template-columns: repeat(4, max-content);
+    grid-template-columns: repeat(2, max-content);
     justify-content: flex-start;
     gap: 10px;
     align-items: center;
@@ -3031,8 +3034,8 @@ html[data-theme="light"] .floating-top-label {
   }
 
   .floating-actions {
-    right: 16px;
-    bottom: 16px;
+    right: 12px;
+    bottom: 12px;
   }
 
   .spec-table {
@@ -3055,7 +3058,7 @@ html[data-theme="light"] .floating-top-label {
 
   .sort-dropdown-trigger {
     min-width: 0;
-    width: min(100%, 220px);
+    width: 100%;
   }
 
   .account-overview {
@@ -3158,14 +3161,14 @@ html[data-theme="light"] .floating-top-label {
   }
 
   .management-product-cell {
-    grid-template-columns: 88px 1fr;
+    grid-template-columns: 1fr;
     align-items: start;
   }
 
   .management-product-cell img {
-    width: 88px;
-    height: 88px;
-    border-radius: 18px;
+    width: 96px;
+    height: 96px;
+    border-radius: 16px;
   }
 
   .management-product-cell > div {
@@ -3197,7 +3200,6 @@ html[data-theme="light"] .floating-top-label {
   }
 
   .management-product-cell::before {
-    grid-column: 1 / -1;
     margin-bottom: 2px;
   }
 
@@ -3270,8 +3272,11 @@ html[data-theme="light"] .floating-top-label {
   }
 
   .floating-cart-button {
-    min-height: 52px;
-    padding: 0 16px;
+    min-height: 44px;
+    min-width: 44px;
+    padding: 0 12px;
+    gap: 8px;
+    border-radius: 16px;
   }
 
   .admin-product-form .section-heading-row h3,
