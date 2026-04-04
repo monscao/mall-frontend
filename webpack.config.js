@@ -1,6 +1,8 @@
 const path = require("path");
+const webpack = require("webpack");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const ReactRefreshWebpackPlugin = require("@pmmmwh/react-refresh-webpack-plugin");
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
 module.exports = (_, argv = {}) => {
   const isDevelopment = (argv.mode || process.env.NODE_ENV) !== "production";
@@ -37,14 +39,14 @@ module.exports = (_, argv = {}) => {
             loader: "babel-loader"
           }
         },
-        {
-          test: /\.css$/,
-          use: ["style-loader", "css-loader"]
-        },
-        {
-          test: /\.scss$/,
-          use: ["style-loader", "css-loader", "sass-loader"]
-        },
+      {
+        test: /\.css$/,
+        use: [isDevelopment ? "style-loader" : MiniCssExtractPlugin.loader, "css-loader"]
+      },
+      {
+        test: /\.scss$/,
+        use: [isDevelopment ? "style-loader" : MiniCssExtractPlugin.loader, "css-loader", "sass-loader"]
+      },
         {
           test: /\.(png|jpe?g|gif|svg|webp)$/i,
           type: "asset/resource"
@@ -52,10 +54,18 @@ module.exports = (_, argv = {}) => {
       ]
     },
     plugins: [
+      new webpack.DefinePlugin({
+        __APP_VERSION__: JSON.stringify(process.env.npm_package_version || "0.1.0")
+      }),
       new HtmlWebpackPlugin({
         template: path.resolve(__dirname, "public/index.html"),
         favicon: path.resolve(__dirname, "public/favicon.svg")
       }),
+      !isDevelopment &&
+        new MiniCssExtractPlugin({
+          filename: "styles.[contenthash].css",
+          chunkFilename: "styles.[contenthash].chunk.css"
+        }),
       isDevelopment && new ReactRefreshWebpackPlugin()
     ].filter(Boolean),
     devServer: {
@@ -76,6 +86,8 @@ module.exports = (_, argv = {}) => {
     optimization: {
       usedExports: true,
       sideEffects: true,
+      moduleIds: "deterministic",
+      chunkIds: "deterministic",
       runtimeChunk: "single",
       splitChunks: {
         chunks: "all",

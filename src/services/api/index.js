@@ -3,6 +3,7 @@ const jsonHeaders = {
 };
 
 const AUTH_EXPIRED_EVENT = "mall-frontend-auth-expired";
+export const APP_VERSION = typeof __APP_VERSION__ !== "undefined" ? __APP_VERSION__ : "0.1.0";
 
 function withAuth(token, headers = {}) {
   return token
@@ -196,6 +197,10 @@ async function apiRequest(path, options = {}) {
 
 export function fetchHome() {
   return apiRequest("/api/home");
+}
+
+export function fetchSystemHealth() {
+  return apiRequest("/api/system/health");
 }
 
 export function fetchCategories() {
