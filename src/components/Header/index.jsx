@@ -6,7 +6,7 @@ import { useTheme } from "context/ThemeContext";
 import { createCatalogPath } from "shared/utils/navigation";
 import { AppLink } from "components/AppLink";
 import { BrandMark } from "components/BrandMark";
-import { IconClose, IconGlobe, IconMenu, IconMoon, IconSun } from "components/Icons";
+import { IconArrowRight, IconClose, IconGlobe, IconMenu, IconMoon, IconSun } from "components/Icons";
 
 export function Header({ currentPath, currentSearch, navigate }) {
   const { isAuthenticated, isAdmin, logout, session } = useAuth();
@@ -76,125 +76,140 @@ export function Header({ currentPath, currentSearch, navigate }) {
         </button>
 
         <div className={`header-mobile-panel ${mobileMenuOpen ? "is-open" : ""}`}>
-          <nav className="header-nav header-nav-minimal">
-            {navItems.map((item) => (
-              <AppLink
-                className={`nav-link ${item.isActive ? "is-active" : ""}`}
-                key={item.to}
-                navigate={navigate}
-                to={item.to}
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                {item.label}
-              </AppLink>
-            ))}
-          </nav>
+          <div className="mobile-menu-section">
+            <span className="mobile-menu-label">Navigation</span>
+            <nav className="header-nav header-nav-minimal">
+              {navItems.map((item) => (
+                <AppLink
+                  className={`nav-link ${item.isActive ? "is-active" : ""}`}
+                  key={item.to}
+                  navigate={navigate}
+                  to={item.to}
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  <span>{item.label}</span>
+                  <IconArrowRight className="button-icon-svg" />
+                </AppLink>
+              ))}
+            </nav>
+          </div>
 
           <div className="header-actions header-actions-minimal">
             {isAuthenticated ? (
-              <div
-                className="user-menu"
-                onMouseEnter={() => setUserMenuOpen(true)}
-                onMouseLeave={() => setUserMenuOpen(false)}
-                ref={userMenuRef}
-              >
-                <button
-                  className="user-menu-trigger"
-                  type="button"
-                  onClick={() => setUserMenuOpen((current) => !current)}
+              <div className="mobile-menu-section">
+                <span className="mobile-menu-label">Account</span>
+                <div
+                  className="user-menu"
+                  onMouseEnter={() => setUserMenuOpen(true)}
+                  onMouseLeave={() => setUserMenuOpen(false)}
+                  ref={userMenuRef}
                 >
-                  {session?.currentUser?.username || session?.username}
-                </button>
-                <div className={`user-menu-panel ${userMenuOpen ? "is-open" : ""}`}>
-                  <button className="user-menu-item" type="button" onClick={() => {
-                    setMobileMenuOpen(false);
-                    navigate("/account");
-                  }}>
-                    {t("header.menu.profile")}
-                  </button>
-                  <button className="user-menu-item" type="button" onClick={() => {
-                    setMobileMenuOpen(false);
-                    navigate("/orders");
-                  }}>
-                    {t("nav.orders")}
-                  </button>
-                  {isAdmin ? (
-                    <>
-                      <button className="user-menu-item" type="button" onClick={() => {
-                        setMobileMenuOpen(false);
-                        navigate("/admin/products");
-                      }}>
-                        {t("header.menu.productManagement")}
-                      </button>
-                      <button className="user-menu-item" type="button" onClick={() => {
-                        setMobileMenuOpen(false);
-                        navigate("/admin/products/new");
-                      }}>
-                        {t("header.menu.addProduct")}
-                      </button>
-                    </>
-                  ) : null}
                   <button
-                    className="user-menu-item user-menu-item-danger"
+                    className="user-menu-trigger"
                     type="button"
-                    onClick={() => {
-                      setUserMenuOpen(false);
-                      setMobileMenuOpen(false);
-                      logout();
-                      navigate("/");
-                      pushNotification({
-                        tone: "success",
-                        title: t("header.logout.title"),
-                        message: t("header.logout.body")
-                      });
-                    }}
+                    onClick={() => setUserMenuOpen((current) => !current)}
                   >
-                    {t("auth.logout")}
+                    {session?.currentUser?.username || session?.username}
                   </button>
+                  <div className={`user-menu-panel ${userMenuOpen ? "is-open" : ""}`}>
+                    <button className="user-menu-item" type="button" onClick={() => {
+                      setMobileMenuOpen(false);
+                      navigate("/account");
+                    }}>
+                      {t("header.menu.profile")}
+                    </button>
+                    <button className="user-menu-item" type="button" onClick={() => {
+                      setMobileMenuOpen(false);
+                      navigate("/orders");
+                    }}>
+                      {t("nav.orders")}
+                    </button>
+                    {isAdmin ? (
+                      <>
+                        <button className="user-menu-item" type="button" onClick={() => {
+                          setMobileMenuOpen(false);
+                          navigate("/admin/products");
+                        }}>
+                          {t("header.menu.productManagement")}
+                        </button>
+                        <button className="user-menu-item" type="button" onClick={() => {
+                          setMobileMenuOpen(false);
+                          navigate("/admin/products/new");
+                        }}>
+                          {t("header.menu.addProduct")}
+                        </button>
+                      </>
+                    ) : null}
+                    <button
+                      className="user-menu-item user-menu-item-danger"
+                      type="button"
+                      onClick={() => {
+                        setUserMenuOpen(false);
+                        setMobileMenuOpen(false);
+                        logout();
+                        navigate("/");
+                        pushNotification({
+                          tone: "success",
+                          title: t("header.logout.title"),
+                          message: t("header.logout.body")
+                        });
+                      }}
+                    >
+                      {t("auth.logout")}
+                    </button>
+                  </div>
                 </div>
               </div>
             ) : (
-              <div className="auth-actions auth-actions-minimal">
-                <AppLink className="text-link" navigate={navigate} to="/login" onClick={() => setMobileMenuOpen(false)}>
-                  {t("auth.login")}
-                </AppLink>
-                <AppLink className="primary-button button-small" navigate={navigate} to="/register" onClick={() => setMobileMenuOpen(false)}>
-                  {t("auth.register")}
-                </AppLink>
+              <div className="mobile-menu-section">
+                <span className="mobile-menu-label">Account</span>
+                <div className="auth-actions auth-actions-minimal">
+                  <AppLink className="secondary-button" navigate={navigate} to="/login" onClick={() => setMobileMenuOpen(false)}>
+                    {t("auth.login")}
+                  </AppLink>
+                  <AppLink className="primary-button button-small" navigate={navigate} to="/register" onClick={() => setMobileMenuOpen(false)}>
+                    {t("auth.register")}
+                  </AppLink>
+                </div>
               </div>
             )}
 
-            <button
-              aria-label={theme === "dark" ? t("theme.dark") : t("theme.light")}
-              className="theme-toggle"
-              type="button"
-              onClick={toggleTheme}
-            >
-              {theme === "dark" ? <IconMoon className="button-icon-svg" /> : <IconSun className="button-icon-svg" />}
-            </button>
+            <div className="mobile-menu-section">
+              <span className="mobile-menu-label">Preferences</span>
+              <div className="mobile-menu-utility-grid">
+                <button
+                  aria-label={theme === "dark" ? t("theme.dark") : t("theme.light")}
+                  className="theme-toggle"
+                  type="button"
+                  onClick={toggleTheme}
+                >
+                  {theme === "dark" ? <IconMoon className="button-icon-svg" /> : <IconSun className="button-icon-svg" />}
+                </button>
 
-            <div className="language-menu" ref={languageRef}>
-              <button
-                className="language-menu-trigger"
-                type="button"
-                onClick={() => setLanguageOpen((current) => !current)}
-              >
-                <IconGlobe className="button-icon-svg" />
-                {language.toUpperCase()}
-              </button>
-              <div className={`language-menu-panel ${languageOpen ? "is-open" : ""}`}>
-                <button className={`language-menu-item ${language === "zh" ? "is-active" : ""}`} type="button" onClick={() => {
-                  setLanguage("zh");
-                  setLanguageOpen(false);
-                }}>
-                  ZH
-                </button>
-                <button className={`language-menu-item ${language === "en" ? "is-active" : ""}`} type="button" onClick={() => {
-                  setLanguage("en");
-                  setLanguageOpen(false);
-                }}>
-                  EN
-                </button>
+                <div className="language-menu" ref={languageRef}>
+                  <button
+                    className="language-menu-trigger"
+                    type="button"
+                    onClick={() => setLanguageOpen((current) => !current)}
+                  >
+                    <IconGlobe className="button-icon-svg" />
+                    {language.toUpperCase()}
+                  </button>
+                  <div className={`language-menu-panel ${languageOpen ? "is-open" : ""}`}>
+                    <button className={`language-menu-item ${language === "zh" ? "is-active" : ""}`} type="button" onClick={() => {
+                      setLanguage("zh");
+                      setLanguageOpen(false);
+                    }}>
+                      ZH
+                    </button>
+                    <button className={`language-menu-item ${language === "en" ? "is-active" : ""}`} type="button" onClick={() => {
+                      setLanguage("en");
+                      setLanguageOpen(false);
+                    }}>
+                      EN
+                    </button>
+                  </div>
+                </div>
               </div>
             </div>
           </div>

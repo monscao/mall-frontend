@@ -65,6 +65,7 @@ export function HomePage({ navigate }) {
 
   const data = state.data;
   const heroProduct = data?.hero?.product;
+  const heroSecondaryCategory = (data?.featuredCategories || [])[0];
 
   return (
     <div className="page-stack">
@@ -105,6 +106,21 @@ export function HomePage({ navigate }) {
               </div>
             </div>
           </div>
+        ) : null}
+
+        {heroSecondaryCategory ? (
+          <button
+            className="hero-secondary-card"
+            type="button"
+            onClick={() => navigate(createCatalogPath(heroSecondaryCategory.code, "featured"))}
+          >
+            <div className="hero-secondary-copy">
+              <span className="eyebrow">{heroSecondaryCategory.code}</span>
+              <strong>{resolveText(heroSecondaryCategory.name)}</strong>
+              <p>{resolveText(heroSecondaryCategory.description)}</p>
+            </div>
+            <IconArrowRight className="button-icon-svg" />
+          </button>
         ) : null}
       </section>
 
