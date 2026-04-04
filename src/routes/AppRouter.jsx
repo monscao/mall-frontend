@@ -1,20 +1,26 @@
-import { useMemo } from "react";
+import { lazy, Suspense, useMemo } from "react";
 import { AppShell } from "app/AppShell";
+import { SectionState } from "components/SectionState";
 import { useRouter } from "hooks/useRouter";
-import { AdminProductPage } from "pages/AdminProductPage";
-import { CartPage } from "pages/CartPage";
-import { CatalogPage } from "pages/CatalogPage";
-import { CheckoutPage } from "pages/CheckoutPage";
-import { HelpCenterPage } from "pages/HelpCenterPage";
-import { HomePage } from "pages/HomePage";
-import { LoginPage } from "pages/LoginPage";
-import { NotFoundPage } from "pages/NotFoundPage";
-import { OrderDetailPage } from "pages/OrderDetailPage";
-import { OrdersPage } from "pages/OrdersPage";
-import { ProductManagementPage } from "pages/ProductManagementPage";
-import { ProductPage } from "pages/ProductPage";
-import { RegisterPage } from "pages/RegisterPage";
-import { UserProfilePage } from "pages/UserProfilePage";
+
+function lazyPage(loader, exportName) {
+  return lazy(() => loader().then((module) => ({ default: module[exportName] })));
+}
+
+const AdminProductPage = lazyPage(() => import("pages/AdminProductPage"), "AdminProductPage");
+const CartPage = lazyPage(() => import("pages/CartPage"), "CartPage");
+const CatalogPage = lazyPage(() => import("pages/CatalogPage"), "CatalogPage");
+const CheckoutPage = lazyPage(() => import("pages/CheckoutPage"), "CheckoutPage");
+const HelpCenterPage = lazyPage(() => import("pages/HelpCenterPage"), "HelpCenterPage");
+const HomePage = lazyPage(() => import("pages/HomePage"), "HomePage");
+const LoginPage = lazyPage(() => import("pages/LoginPage"), "LoginPage");
+const NotFoundPage = lazyPage(() => import("pages/NotFoundPage"), "NotFoundPage");
+const OrderDetailPage = lazyPage(() => import("pages/OrderDetailPage"), "OrderDetailPage");
+const OrdersPage = lazyPage(() => import("pages/OrdersPage"), "OrdersPage");
+const ProductManagementPage = lazyPage(() => import("pages/ProductManagementPage"), "ProductManagementPage");
+const ProductPage = lazyPage(() => import("pages/ProductPage"), "ProductPage");
+const RegisterPage = lazyPage(() => import("pages/RegisterPage"), "RegisterPage");
+const UserProfilePage = lazyPage(() => import("pages/UserProfilePage"), "UserProfilePage");
 
 export function AppRouter() {
   const { route, navigate, orderId, productSlug } = useRouter();
@@ -77,7 +83,13 @@ export function AppRouter() {
 
   return (
     <AppShell currentPath={route.pathname} currentSearch={route.search} navigate={navigate}>
-      {currentPage}
+      <Suspense
+        fallback={
+          <SectionState title="Loading page" body="Fetching the next view and preparing the storefront." tone="loading" />
+        }
+      >
+        {currentPage}
+      </Suspense>
     </AppShell>
   );
 }
