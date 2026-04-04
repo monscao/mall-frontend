@@ -1,5 +1,6 @@
 import { lazy, Suspense, useMemo } from "react";
 import { AppShell } from "app/AppShell";
+import { SeoManager } from "app/SeoManager";
 import { SectionState } from "components/SectionState";
 import { useRouter } from "hooks/useRouter";
 
@@ -83,6 +84,7 @@ export function AppRouter() {
 
   return (
     <AppShell currentPath={route.pathname} currentSearch={route.search} navigate={navigate}>
+      <SeoManager pathname={route.pathname} productSlug={productSlug} />
       <Suspense
         fallback={
           <SectionState title="Loading page" body="Fetching the next view and preparing the storefront." tone="loading" />

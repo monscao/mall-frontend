@@ -14,6 +14,13 @@ export function ThemeProvider({ children }) {
   useEffect(() => {
     document.documentElement.dataset.theme = theme;
     window.localStorage.setItem(STORAGE_KEY, theme);
+
+    const themeColor = theme === "light" ? "#f1ebe3" : "#06101b";
+    const themeColorMeta = document.querySelector('meta[name="theme-color"]');
+
+    if (themeColorMeta) {
+      themeColorMeta.setAttribute("content", themeColor);
+    }
   }, [theme]);
 
   const value = useMemo(
