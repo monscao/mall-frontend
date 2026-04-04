@@ -49,9 +49,9 @@ describe("ProductPage", () => {
   test("renders error state when product request fails", async () => {
     mockFetchProductDetail.mockRejectedValue(new Error("failed"));
 
-    render(<ProductPage navigate={jest.fn()} slug="broken" />);
+    const { container } = render(<ProductPage navigate={jest.fn()} slug="broken" />);
 
-    expect(screen.getByText("product.loading.title")).toBeInTheDocument();
+    expect(container.querySelector(".page-skeleton-detail")).toBeInTheDocument();
     await waitFor(() => expect(screen.getByText("product.error.title")).toBeInTheDocument());
   });
 

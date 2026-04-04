@@ -1,5 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
+import { Pagination } from "components/Pagination";
 import { ProductCard } from "components/ProductCard";
+import { ProductCardSkeleton } from "components/ProductCardSkeleton";
 import { SectionState } from "components/SectionState";
 import { SortDropdown } from "components/SortDropdown";
 import { useI18n } from "context/I18nContext";
@@ -108,26 +110,6 @@ export function CatalogPage({ navigate, route }) {
     };
   }, [selectedCategory, selectedKeyword, selectedPage, selectedSort]);
 
-  const heading = useMemo(() => {
-    if (!selectedCategory) {
-      return t("catalog.all");
-    }
-
-    const category = categories.find((item) => item.code === selectedCategory);
-    return category ? resolveText(category.name) : t("catalog.result");
-  }, [categories, resolveText, selectedCategory, t]);
-
-  const resultSummary = useMemo(() => {
-    if (productsState.total === 0) {
-      return selectedKeyword ? t("catalog.results.noneWithKeyword") : t("catalog.results.none");
-    }
-
-    return t("catalog.results.summary")
-      .replace("{{count}}", String(productsState.total))
-      .replace("{{page}}", String(productsState.page))
-      .replace("{{totalPages}}", String(Math.max(productsState.totalPages, 1)));
-  }, [productsState.page, productsState.total, productsState.totalPages, selectedKeyword, t]);
-
   const navigateCatalog = (nextOverrides = {}) => {
     navigate(
       createCatalogPath({
@@ -151,20 +133,7 @@ export function CatalogPage({ navigate, route }) {
     <div className="page-stack">
       <section className="catalog-page-toolbar-shell">
         <div className="catalog-page-toolbar">
-          <div className="catalog-toolbar-main">
-            <form className="catalog-search-form" onSubmit={handleSearchSubmit}>
-              <input
-                className="catalog-search-input"
-                type="search"
-                value={keywordInput}
-                placeholder={t("catalog.search.placeholder")}
-                onChange={(event) => setKeywordInput(event.target.value)}
-              />
-              <button className="primary-button catalog-search-button" type="submit">
-                {t("catalog.search.submit")}
-              </button>
-            </form>
-
+          <div className="catalog-filter-row">
             <div className="chip-row">
               <button
                 className={`filter-chip ${selectedCategory === "" ? "is-selected" : ""}`}
@@ -186,12 +155,19 @@ export function CatalogPage({ navigate, route }) {
             </div>
           </div>
 
-          <div className="catalog-toolbar-side">
-            <div className="catalog-results-meta">
-              <strong>{heading}</strong>
-              <span>{resultSummary}</span>
-            </div>
-
+          <div className="catalog-toolbar-search">
+            <form className="catalog-search-form" onSubmit={handleSearchSubmit}>
+              <input
+                className="catalog-search-input"
+                type="search"
+                value={keywordInput}
+                placeholder={t("catalog.search.placeholder")}
+                onChange={(event) => setKeywordInput(event.target.value)}
+              />
+              <button className="primary-button catalog-search-button" type="submit">
+                {t("catalog.search.submit")}
+              </button>
+            </form>
             <SortDropdown
               onChange={(nextSort) => navigateCatalog({ sort: nextSort, page: 1 })}
               options={sortOptions}
@@ -202,7 +178,13 @@ export function CatalogPage({ navigate, route }) {
       </section>
 
       {productsState.loading ? (
-        <SectionState title={t("catalog.loading.title")} body={t("catalog.loading.body")} tone="loading" />
+        <section className="panel catalog-loading-shell">
+          <div className="product-grid product-grid-skeleton">
+            {Array.from({ length: 10 }, (_, index) => (
+              <ProductCardSkeleton key={`catalog-skeleton-${index}`} />
+            ))}
+          </div>
+        </section>
       ) : null}
 
       {productsState.error ? (
@@ -227,32 +209,27 @@ export function CatalogPage({ navigate, route }) {
           </div>
 
           {productsState.products.length === 0 ? (
-            <SectionState title={t("catalog.empty.title")} body={t("catalog.empty.body")} />
+            <SectionState
+              title={t("catalog.empty.title")}
+              body={
+                selectedKeyword
+                  ? t("catalog.empty.body")
+                  : selectedCategory
+                    ? t("catalog.empty.categoryBody")
+                    : t("catalog.empty.storeBody")
+              }
+            />
           ) : null}
 
-          {productsState.products.length > 0 && productsState.totalPages > 1 ? (
-            <div className="catalog-pagination">
-              <button
-                className="secondary-button"
-                type="button"
-                disabled={!productsState.hasPrevious}
-                onClick={() => navigateCatalog({ page: productsState.page - 1 })}
-              >
-                {t("catalog.pagination.previous")}
-              </button>
-              <div className="catalog-pagination-summary">
-                {t("catalog.pagination.summary")
-                  .replace("{{page}}", String(productsState.page))
-                  .replace("{{totalPages}}", String(productsState.totalPages))}
-              </div>
-              <button
-                className="secondary-button"
-                type="button"
-                disabled={!productsState.hasNext}
-                onClick={() => navigateCatalog({ page: productsState.page + 1 })}
-              >
-                {t("catalog.pagination.next")}
-              </button>
+          {productsState.products.length > 0 ? (
+            <div className="catalog-results-footer">
+              <Pagination
+                currentPage={productsState.page}
+                totalItems={productsState.total}
+                totalPages={productsState.totalPages}
+                t={t}
+                onPageChange={(page) => navigateCatalog({ page })}
+              />
             </div>
           ) : null}
         </section>

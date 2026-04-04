@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { PageSkeleton } from "components/PageSkeleton";
 import { SectionState } from "components/SectionState";
 import { useAuth } from "context/AuthContext";
 import { useI18n } from "context/I18nContext";
@@ -58,7 +59,7 @@ export function OrderDetailPage({ navigate, orderId }) {
   }
 
   if (state.loading) {
-    return <SectionState title={t("order.detail.eyebrow")} body={t("product.loading.body")} tone="loading" />;
+    return <PageSkeleton variant="detail" />;
   }
 
   if (state.error || !state.order) {

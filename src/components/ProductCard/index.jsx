@@ -39,8 +39,8 @@ export function ProductCard({ product, navigate, onAddToCart }) {
 
       <div className="product-body">
         <div className="product-topline">
-          <span>{product.brand}</span>
-          <span>{product.rating}</span>
+          <span className="product-brand">{product.brand}</span>
+          <span className="product-rating">{product.rating}</span>
         </div>
 
         <div className="product-copy">
@@ -48,8 +48,8 @@ export function ProductCard({ product, navigate, onAddToCart }) {
           <p>{resolveText(product.subtitle)}</p>
         </div>
 
-        <div className="tag-row">
-          {(product.tags || []).slice(0, 3).map((tag) => (
+        <div className="tag-row tag-row-compact">
+          {(product.tags || []).slice(0, 2).map((tag) => (
             <span className="tag-pill muted" key={tag}>
               {resolveTag(tag)}
             </span>
@@ -63,11 +63,11 @@ export function ProductCard({ product, navigate, onAddToCart }) {
             {product.marketPrice ? <span className="market-price">{formatCurrency(product.marketPrice, locale)}</span> : null}
           </div>
 
-          <div className="card-actions">
-            <button className="secondary-button" type="button" onClick={() => navigate(`/product/${product.slug}`)}>
+          <div className="card-actions card-actions-compact">
+            <button className="secondary-button card-action-secondary" type="button" onClick={() => navigate(`/product/${product.slug}`)}>
               {t("product.viewDetails")}
             </button>
-            <button className="primary-button" type="button" onClick={handleAdd}>
+            <button className="primary-button card-action-primary" type="button" onClick={handleAdd}>
               {t("product.addToCart")}
             </button>
           </div>

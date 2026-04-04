@@ -1,5 +1,6 @@
 import { EmptyState } from "components/EmptyState";
 import { useEffect, useState } from "react";
+import { PageSkeleton } from "components/PageSkeleton";
 import { SectionState } from "components/SectionState";
 import { useAuth } from "context/AuthContext";
 import { useI18n } from "context/I18nContext";
@@ -55,7 +56,7 @@ export function OrdersPage({ navigate }) {
   }
 
   if (state.loading) {
-    return <SectionState title={t("orders.heading")} body={t("product.loading.body")} tone="loading" />;
+    return <PageSkeleton />;
   }
 
   if (state.error) {

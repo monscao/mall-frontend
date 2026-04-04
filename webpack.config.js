@@ -11,7 +11,7 @@ module.exports = (_, argv = {}) => {
     entry: path.resolve(__dirname, "src/index.jsx"),
     output: {
       path: path.resolve(__dirname, "dist"),
-      filename: isDevelopment ? "bundle.js" : "bundle.[contenthash].js",
+      filename: isDevelopment ? "[name].js" : "bundle.[contenthash].js",
       chunkFilename: isDevelopment ? "[name].chunk.js" : "[name].[contenthash].chunk.js",
       clean: true,
       publicPath: "/"

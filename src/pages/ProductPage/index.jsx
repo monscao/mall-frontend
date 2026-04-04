@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { PageSkeleton } from "components/PageSkeleton";
 import { useCart } from "context/CartContext";
 import { useI18n } from "context/I18nContext";
 import { useNotification } from "context/NotificationContext";
@@ -148,7 +149,7 @@ export function ProductPage({ navigate, slug }) {
   }, [state.selectedSkuCode]);
 
   if (state.loading) {
-    return <SectionState title={t("product.loading.title")} body={t("product.loading.body")} tone="loading" />;
+    return <PageSkeleton variant="detail" />;
   }
 
   if (state.error) {

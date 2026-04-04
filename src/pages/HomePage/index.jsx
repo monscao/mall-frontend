@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { PageSkeleton } from "components/PageSkeleton";
 import { ProductCard } from "components/ProductCard";
 import { SafeImage } from "components/SafeImage";
 import { SectionState } from "components/SectionState";
@@ -45,7 +46,7 @@ export function HomePage({ navigate }) {
   }, []);
 
   if (state.loading) {
-    return <SectionState title={t("home.loading.title")} body={t("home.loading.body")} tone="loading" />;
+    return <PageSkeleton />;
   }
 
   if (state.error) {

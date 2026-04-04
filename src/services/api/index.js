@@ -217,7 +217,22 @@ export function fetchProducts(params = {}) {
   });
 
   const suffix = search.toString() ? `?${search.toString()}` : "";
-  return apiRequest(`/api/catalog/products${suffix}`);
+  return apiRequest(`/api/catalog/products${suffix}`).then((payload) => {
+    if (Array.isArray(payload)) {
+      return {
+        items: payload,
+        page: 1,
+        size: payload.length,
+        total: payload.length,
+        totalPages: payload.length > 0 ? 1 : 0,
+        hasPrevious: false,
+        hasNext: false,
+        keyword: params.q || ""
+      };
+    }
+
+    return payload;
+  });
 }
 
 export function fetchProductDetail(slug) {

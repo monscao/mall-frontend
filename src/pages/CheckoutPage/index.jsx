@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { PageSkeleton } from "components/PageSkeleton";
 import { SectionState } from "components/SectionState";
 import { useAuth } from "context/AuthContext";
 import { useCart } from "context/CartContext";
@@ -27,7 +28,7 @@ export function CheckoutPage({ navigate }) {
   });
 
   if (!cartReady) {
-    return <SectionState title={t("checkout.heading")} body={t("cart.syncing")} tone="loading" />;
+    return <PageSkeleton />;
   }
 
   if (placed) {

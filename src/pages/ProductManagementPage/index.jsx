@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { PageSkeleton } from "components/PageSkeleton";
 import { SectionState } from "components/SectionState";
 import { useAuth } from "context/AuthContext";
 import { useI18n } from "context/I18nContext";
@@ -75,7 +76,7 @@ export function ProductManagementPage({ navigate }) {
   }
 
   if (productsState.loading) {
-    return <SectionState title={t("admin.management.loading.title")} body={t("admin.management.loading.body")} tone="loading" />;
+    return <PageSkeleton />;
   }
 
   if (productsState.error) {
