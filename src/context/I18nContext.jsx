@@ -43,6 +43,14 @@ export function I18nProvider({ children }) {
         }
 
         return getNestedTranslation(dictionary, `raw.${text}`) || text;
+      },
+      resolveTag(tag) {
+        if (!tag) {
+          return "";
+        }
+
+        const normalized = String(tag).trim();
+        return getNestedTranslation(dictionary, `raw.${normalized}`) || normalized;
       }
     };
   }, [language]);

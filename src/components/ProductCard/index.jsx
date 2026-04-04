@@ -5,7 +5,7 @@ import { SafeImage } from "components/SafeImage";
 
 export function ProductCard({ product, navigate, onAddToCart }) {
   const { addItem } = useCart();
-  const { locale, resolveText, t } = useI18n();
+  const { locale, resolveTag, resolveText, t } = useI18n();
 
   const handleAdd = () => {
     if (onAddToCart) {
@@ -13,8 +13,13 @@ export function ProductCard({ product, navigate, onAddToCart }) {
       return;
     }
 
+    if (!product.defaultSkuCode) {
+      navigate(`/product/${product.slug}`);
+      return;
+    }
+
     addItem({
-      skuCode: `${product.slug}-default`,
+      skuCode: product.defaultSkuCode,
       productSlug: product.slug,
       productName: product.name,
       skuName: product.subtitle,
@@ -46,7 +51,7 @@ export function ProductCard({ product, navigate, onAddToCart }) {
         <div className="tag-row">
           {(product.tags || []).slice(0, 3).map((tag) => (
             <span className="tag-pill muted" key={tag}>
-              {tag}
+              {resolveTag(tag)}
             </span>
           ))}
           <span className="tag-pill muted">{t(stockLabelKey(product.stockStatus))}</span>

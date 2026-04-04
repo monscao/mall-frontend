@@ -13,6 +13,7 @@ jest.mock("context/CartContext", () => ({
 jest.mock("context/I18nContext", () => ({
   useI18n: () => ({
     locale: "zh-CN",
+    resolveTag: (value) => value,
     resolveText: (value) => value,
     t: (key, params) => (params?.name ? `${key}:${params.name}` : key)
   })

@@ -164,10 +164,10 @@ export function Header({ currentPath, currentSearch, navigate }) {
               <div className="mobile-menu-section">
                 <span className="mobile-menu-label">Account</span>
                 <div className="auth-actions auth-actions-minimal">
-                  <AppLink className="secondary-button" navigate={navigate} to="/login" onClick={() => setMobileMenuOpen(false)}>
+                  <AppLink className="secondary-button header-auth-link" navigate={navigate} to="/login" onClick={() => setMobileMenuOpen(false)}>
                     {t("auth.login")}
                   </AppLink>
-                  <AppLink className="primary-button button-small" navigate={navigate} to="/register" onClick={() => setMobileMenuOpen(false)}>
+                  <AppLink className="primary-button button-small header-auth-link header-auth-link-primary" navigate={navigate} to="/register" onClick={() => setMobileMenuOpen(false)}>
                     {t("auth.register")}
                   </AppLink>
                 </div>

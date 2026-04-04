@@ -2,10 +2,11 @@ import { useState } from "react";
 import { useAuth } from "context/AuthContext";
 import { useI18n } from "context/I18nContext";
 import { useNotification } from "context/NotificationContext";
+import { SectionState } from "components/SectionState";
 import { getReadableErrorMessage } from "services/api";
 
 export function AuthFormPage({ mode, navigate }) {
-  const { login, register } = useAuth();
+  const { isAuthenticated, login, register } = useAuth();
   const { t } = useI18n();
   const { pushNotification } = useNotification();
   const copy = {
@@ -25,6 +26,21 @@ export function AuthFormPage({ mode, navigate }) {
   });
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
+
+  if (isAuthenticated) {
+    return (
+      <SectionState
+        title={t("auth.already.title")}
+        body={t("auth.already.body")}
+        tone="info"
+        action={
+          <button className="primary-button" type="button" onClick={() => navigate("/account")}>
+            {t("auth.already.cta")}
+          </button>
+        }
+      />
+    );
+  }
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -57,7 +73,7 @@ export function AuthFormPage({ mode, navigate }) {
       setError(message);
       pushNotification({
         tone: "error",
-        title: t("auth.requestFailed.title"),
+        title: t(mode === "login" ? "auth.loginFailed.title" : "auth.registerFailed.title"),
         message
       });
     } finally {

@@ -8,7 +8,7 @@ import { IconArrowLeft, IconCart } from "components/Icons";
 import { SafeImage } from "components/SafeImage";
 import { SectionState } from "components/SectionState";
 
-function getProductSpecRows(product, selectedSku, t) {
+function getProductSpecRows(product, selectedSku, t, resolveTag) {
   const specSummary = selectedSku?.specSummary
     ? selectedSku.specSummary
         .split("/")
@@ -53,7 +53,7 @@ function getProductSpecRows(product, selectedSku, t) {
     rows.push({
       key: "tags",
       label: t("product.spec.tags"),
-      value: product.tags.join(" / ")
+      value: product.tags.map(resolveTag).join(" / ")
     });
   }
 
@@ -62,7 +62,7 @@ function getProductSpecRows(product, selectedSku, t) {
 
 export function ProductPage({ navigate, slug }) {
   const { addItem } = useCart();
-  const { locale, resolveText, t } = useI18n();
+  const { locale, resolveTag, resolveText, t } = useI18n();
   const { pushNotification } = useNotification();
   const [state, setState] = useState({
     loading: true,
@@ -132,11 +132,11 @@ export function ProductPage({ navigate, slug }) {
       return [];
     }
 
-    return getProductSpecRows(state.product, selectedSku, t).map((row) => ({
+    return getProductSpecRows(state.product, selectedSku, t, resolveTag).map((row) => ({
       ...row,
-      value: resolveText(row.value)
+      value: row.key === "tags" ? row.value : resolveText(row.value)
     }));
-  }, [resolveText, selectedSku, state.product, t]);
+  }, [resolveTag, resolveText, selectedSku, state.product, t]);
 
   const selectedImage = gallery[state.selectedImageIndex] || selectedSku?.coverImage || state.product?.coverImage;
 
@@ -266,7 +266,7 @@ export function ProductPage({ navigate, slug }) {
           <div className="tag-row">
             {(product.tags || []).map((tag) => (
               <span className="tag-pill muted" key={tag}>
-                {tag}
+                {resolveTag(tag)}
               </span>
             ))}
           </div>

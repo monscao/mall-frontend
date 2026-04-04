@@ -86,6 +86,34 @@ function normalizeHttpError(response, data, fallbackMessage) {
 }
 
 export function getReadableErrorMessage(error, t) {
+  const rawMessage = String(error?.rawMessage || "").toLowerCase();
+
+  if (error?.code === "BAD_REQUEST") {
+    if (rawMessage.includes("invalid username or password")) {
+      return t("auth.error.invalidCredentials");
+    }
+
+    if (rawMessage.includes("username already exists")) {
+      return t("auth.error.usernameExists");
+    }
+
+    if (rawMessage.includes("user is disabled")) {
+      return t("auth.error.userDisabled");
+    }
+
+    if (rawMessage.includes("username is required")) {
+      return t("auth.error.usernameRequired");
+    }
+
+    if (rawMessage.includes("password is required")) {
+      return t("auth.error.passwordRequired");
+    }
+
+    if (rawMessage.includes("password must be at least 6 characters")) {
+      return t("auth.error.passwordLength");
+    }
+  }
+
   switch (error?.code) {
     case "NETWORK_UNAVAILABLE":
       return t("error.network.body");
@@ -101,6 +129,8 @@ export function getReadableErrorMessage(error, t) {
       return t("error.service.body");
     case "FILE_TOO_LARGE":
       return t("error.upload.body");
+    case "BAD_REQUEST":
+      return error?.rawMessage || t("error.generic.body");
     default:
       return t("error.generic.body");
   }

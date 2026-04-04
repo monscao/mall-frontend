@@ -57,6 +57,13 @@ describe("api helpers", () => {
     expect(getReadableErrorMessage({ code: "AUTH_REQUIRED" }, t)).toBe("error.auth.body");
     expect(getReadableErrorMessage({ code: "FORBIDDEN" }, t)).toBe("error.forbidden.body");
     expect(getReadableErrorMessage({ code: "FILE_TOO_LARGE" }, t)).toBe("error.upload.body");
+    expect(getReadableErrorMessage({ code: "BAD_REQUEST", rawMessage: "Invalid username or password" }, t)).toBe("auth.error.invalidCredentials");
+    expect(getReadableErrorMessage({ code: "BAD_REQUEST", rawMessage: "Username already exists" }, t)).toBe("auth.error.usernameExists");
+    expect(getReadableErrorMessage({ code: "BAD_REQUEST", rawMessage: "User is disabled" }, t)).toBe("auth.error.userDisabled");
+    expect(getReadableErrorMessage({ code: "BAD_REQUEST", rawMessage: "Username is required" }, t)).toBe("auth.error.usernameRequired");
+    expect(getReadableErrorMessage({ code: "BAD_REQUEST", rawMessage: "Password is required" }, t)).toBe("auth.error.passwordRequired");
+    expect(getReadableErrorMessage({ code: "BAD_REQUEST", rawMessage: "Password must be at least 6 characters" }, t)).toBe("auth.error.passwordLength");
+    expect(getReadableErrorMessage({ code: "BAD_REQUEST", rawMessage: "Something custom failed" }, t)).toBe("Something custom failed");
     expect(getReadableErrorMessage({ code: "UNKNOWN" }, t)).toBe("error.generic.body");
     expect(getErrorTone({ code: "NETWORK_UNAVAILABLE" })).toBe("network");
     expect(getErrorTone({ code: "AUTH_REQUIRED" })).toBe("info");

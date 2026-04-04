@@ -107,20 +107,6 @@ export function HomePage({ navigate }) {
           </div>
         ) : null}
 
-        <button
-          className="hero-secondary-card"
-          type="button"
-          onClick={() => navigate(createCatalogPath("", "sales"))}
-        >
-            <SafeImage alt={t("home.secondary.title")} src={heroProduct?.coverImage} />
-            <div className="hero-secondary-overlay" />
-            <div className="hero-secondary-copy">
-              <span className="eyebrow">{t("home.secondary.eyebrow")}</span>
-              <strong>{t("home.secondary.title")}</strong>
-              <p>{t("home.secondary.body")}</p>
-            </div>
-            <IconArrowRight className="button-icon-svg" />
-        </button>
       </section>
 
       <section className="panel">

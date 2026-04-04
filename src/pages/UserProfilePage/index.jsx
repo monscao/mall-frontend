@@ -25,7 +25,6 @@ export function UserProfilePage({ navigate }) {
   return (
     <div className="page-stack">
       <section className="account-overview">
-        <div className="account-avatar">{(user?.nickname || user?.username || "U").slice(0, 1).toUpperCase()}</div>
         <div className="account-copy">
           <h1>{t("profile.title")}</h1>
           <p>{t("profile.subtitle")}</p>

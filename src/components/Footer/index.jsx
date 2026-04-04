@@ -1,9 +1,11 @@
 import { useI18n } from "context/I18nContext";
+import { useAuth } from "context/AuthContext";
 import { AppLink } from "components/AppLink";
 import { BrandMark } from "components/BrandMark";
 import { IconBell, IconInstagram, IconLinkedIn, IconYouTube } from "components/Icons";
 
 export function Footer({ navigate }) {
+  const { isAuthenticated } = useAuth();
   const { language, t } = useI18n();
   const footerGroups = [
     {
@@ -16,12 +18,18 @@ export function Footer({ navigate }) {
     },
     {
       title: t("footer.account"),
-      links: [
-        { label: t("footer.login"), to: "/login" },
-        { label: t("footer.register"), to: "/register" },
-        { label: t("footer.orders"), to: "/orders" },
-        { label: t("footer.latest"), to: "/catalog?sort=latest" }
-      ]
+      links: isAuthenticated
+        ? [
+            { label: t("header.menu.profile"), to: "/account" },
+            { label: t("footer.orders"), to: "/orders" },
+            { label: t("footer.latest"), to: "/catalog?sort=latest" }
+          ]
+        : [
+            { label: t("footer.login"), to: "/login" },
+            { label: t("footer.register"), to: "/register" },
+            { label: t("footer.orders"), to: "/orders" },
+            { label: t("footer.latest"), to: "/catalog?sort=latest" }
+          ]
     },
     {
       title: t("footer.service"),
@@ -89,13 +97,15 @@ export function Footer({ navigate }) {
 
       <div className="footer-links footer-links-expanded">
         {footerGroups.map((group) => (
-          <section key={group.title}>
+          <section className="footer-link-column" key={group.title}>
             <span>{group.title}</span>
-            {group.links.map((link, index) => (
-              <AppLink className="footer-link" key={`${group.title}-${link.to}-${index}`} navigate={navigate} to={link.to}>
-                {link.label}
-              </AppLink>
-            ))}
+            <div className="footer-link-list">
+              {group.links.map((link, index) => (
+                <AppLink className="footer-link" key={`${group.title}-${link.to}-${index}`} navigate={navigate} to={link.to}>
+                  {link.label}
+                </AppLink>
+              ))}
+            </div>
           </section>
         ))}
       </div>
