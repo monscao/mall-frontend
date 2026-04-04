@@ -177,13 +177,10 @@ img {
   width: 42px;
   height: 42px;
   border-radius: 14px;
-  background: linear-gradient(135deg, #86b1f4, #f29c74);
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.18),
-    0 10px 24px rgba(63, 98, 150, 0.18);
-  color: #0f1728;
-  font-weight: 700;
-  letter-spacing: 0.04em;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.04);
+  color: #f4f7fb;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
 }
 
 .brand-lockup strong,
@@ -196,12 +193,28 @@ img {
 .brand-lockup strong {
   line-height: 1;
   font-size: 1rem;
-  font-weight: 700;
-  letter-spacing: 0.01em;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
 }
 
 .footer-brand h3 {
-  font-size: 1.08rem;
+  font-size: 1rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.brand-mark-svg {
+  width: 24px;
+  height: 24px;
+  display: block;
+}
+
+html[data-theme="light"] .brand-mark {
+  background: rgba(19, 32, 45, 0.04);
+  border-color: rgba(19, 32, 45, 0.08);
+  color: #0b1220;
 }
 
 .header-nav,
@@ -2351,6 +2364,7 @@ html[data-theme="light"] .notification-close:hover {
 
 .site-footer {
   margin-bottom: 24px;
+  background: color-mix(in srgb, var(--surface) 96%, transparent);
 }
 
 .footer-top {
@@ -2362,7 +2376,7 @@ html[data-theme="light"] .notification-close:hover {
 
 .footer-brand-column {
   display: grid;
-  gap: 22px;
+  gap: 18px;
 }
 
 .footer-brand-column-wide {
@@ -2378,12 +2392,13 @@ html[data-theme="light"] .notification-close:hover {
 .footer-badge {
   display: inline-flex;
   align-items: center;
-  min-height: 40px;
-  padding: 0 14px;
+  min-height: 36px;
+  padding: 0 12px;
   border: 1px solid var(--line);
-  border-radius: 999px;
+  border-radius: 12px;
   background: var(--soft-fill);
   color: var(--muted);
+  font-size: 0.82rem;
 }
 
 .footer-callout {
@@ -2399,9 +2414,9 @@ html[data-theme="light"] .notification-close:hover {
 }
 
 .footer-subscribe-card {
-  padding: 22px;
+  padding: 20px;
   border: 1px solid var(--line);
-  border-radius: 24px;
+  border-radius: 20px;
   background:
     radial-gradient(circle at top right, color-mix(in srgb, var(--accent) 14%, transparent), transparent 36%),
     color-mix(in srgb, var(--surface-muted) 92%, transparent);
@@ -2481,7 +2496,7 @@ html[data-theme="light"] .notification-close:hover {
   align-items: center;
   gap: 8px;
   padding: 10px 14px;
-  border-radius: 999px;
+  border-radius: 12px;
   background: var(--soft-fill);
   cursor: pointer;
 }
@@ -2492,7 +2507,7 @@ html[data-theme="light"] .notification-close:hover {
   width: 42px;
   height: 42px;
   border: 1px solid var(--line);
-  border-radius: 999px;
+  border-radius: 12px;
   background: var(--soft-fill);
   color: var(--muted);
   cursor: pointer;

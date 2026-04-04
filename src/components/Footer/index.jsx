@@ -1,5 +1,6 @@
 import { useI18n } from "context/I18nContext";
 import { AppLink } from "components/AppLink";
+import { BrandMark } from "components/BrandMark";
 import { IconBell, IconInstagram, IconLinkedIn, IconYouTube } from "components/Icons";
 
 export function Footer({ navigate }) {
@@ -53,7 +54,9 @@ export function Footer({ navigate }) {
       <div className="footer-top">
         <div className="footer-brand-column footer-brand-column-wide">
           <div className="footer-brand">
-            <span className="brand-mark">AL</span>
+            <span className="brand-mark" aria-hidden="true">
+              <BrandMark />
+            </span>
             <div>
               <h3>{t("footer.title")}</h3>
               <p>{t("footer.subtitle")}</p>

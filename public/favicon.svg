@@ -1,20 +1,7 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
-  <defs>
-    <linearGradient id="bg" x1="8" x2="56" y1="8" y2="56" gradientUnits="userSpaceOnUse">
-      <stop offset="0" stop-color="#86b1f4" />
-      <stop offset="1" stop-color="#f29c74" />
-    </linearGradient>
-  </defs>
-  <rect x="4" y="4" width="56" height="56" rx="18" fill="url(#bg)" />
-  <text
-    x="32"
-    y="38"
-    text-anchor="middle"
-    font-family="Arial, Helvetica, sans-serif"
-    font-size="22"
-    font-weight="700"
-    fill="#0f1728"
-  >
-    AL
-  </text>
+<svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="64" height="64" rx="18" fill="#0B1220"/>
+  <rect x="10" y="13" width="10" height="38" rx="3" fill="#F4F7FB"/>
+  <rect x="44" y="13" width="10" height="38" rx="3" fill="#F4F7FB"/>
+  <path d="M20 17.5C20 15.567 21.567 14 23.5 14H24.708C26.047 14 27.272 14.7562 27.874 15.9538L32 24.171L36.126 15.9538C36.728 14.7562 37.953 14 39.292 14H40.5C42.433 14 44 15.567 44 17.5V22.1308C44 22.6739 43.8738 23.2097 43.6313 23.6953L34.1313 42.6953C33.5381 43.8818 32.3254 44.6328 31 44.6328C29.6746 44.6328 28.4619 43.8818 27.8687 42.6953L18.3687 23.6953C18.1262 23.2097 18 22.6739 18 22.1308L20 17.5Z" fill="#F4F7FB"/>
+  <path d="M27 31L32 41L37 31" stroke="#0B1220" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
 </svg>

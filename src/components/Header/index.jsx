@@ -5,6 +5,7 @@ import { useNotification } from "context/NotificationContext";
 import { useTheme } from "context/ThemeContext";
 import { createCatalogPath } from "shared/utils/navigation";
 import { AppLink } from "components/AppLink";
+import { BrandMark } from "components/BrandMark";
 import { IconClose, IconGlobe, IconMenu, IconMoon, IconSun } from "components/Icons";
 
 export function Header({ currentPath, currentSearch, navigate }) {
@@ -56,9 +57,11 @@ export function Header({ currentPath, currentSearch, navigate }) {
     <header className="site-header">
       <div className={`header-inner header-inner-minimal ${mobileMenuOpen ? "is-mobile-open" : ""}`}>
         <AppLink className="brand-lockup" navigate={navigate} to="/">
-          <span className="brand-mark">AL</span>
+          <span className="brand-mark" aria-hidden="true">
+            <BrandMark />
+          </span>
           <div>
-            <strong>Apple Lite</strong>
+            <strong>MONSCAO</strong>
           </div>
         </AppLink>
 
