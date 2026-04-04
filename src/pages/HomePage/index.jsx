@@ -65,7 +65,6 @@ export function HomePage({ navigate }) {
 
   const data = state.data;
   const heroProduct = data?.hero?.product;
-  const heroSecondaryCategory = (data?.featuredCategories || [])[0];
 
   return (
     <div className="page-stack">
@@ -108,22 +107,20 @@ export function HomePage({ navigate }) {
           </div>
         ) : null}
 
-        {heroSecondaryCategory ? (
-          <button
-            className="hero-secondary-card"
-            type="button"
-            onClick={() => navigate(createCatalogPath(heroSecondaryCategory.code, "featured"))}
-          >
-            <SafeImage alt={heroSecondaryCategory.name} src={heroSecondaryCategory.bannerImage} />
+        <button
+          className="hero-secondary-card"
+          type="button"
+          onClick={() => navigate(createCatalogPath("", "sales"))}
+        >
+            <SafeImage alt={t("home.secondary.title")} src={heroProduct?.coverImage} />
             <div className="hero-secondary-overlay" />
             <div className="hero-secondary-copy">
-              <span className="eyebrow">{heroSecondaryCategory.code}</span>
-              <strong>{resolveText(heroSecondaryCategory.name)}</strong>
-              <p>{resolveText(heroSecondaryCategory.description)}</p>
+              <span className="eyebrow">{t("home.secondary.eyebrow")}</span>
+              <strong>{t("home.secondary.title")}</strong>
+              <p>{t("home.secondary.body")}</p>
             </div>
             <IconArrowRight className="button-icon-svg" />
-          </button>
-        ) : null}
+        </button>
       </section>
 
       <section className="panel">
