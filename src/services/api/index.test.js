@@ -76,7 +76,7 @@ describe("api helpers", () => {
 
   test("JSON requests include auth and parse payloads", async () => {
     global.fetch.mockResolvedValueOnce(mockJsonResponse({ theme: "apple-lite" }));
-    global.fetch.mockResolvedValueOnce(mockJsonResponse([{ id: 1 }]));
+    global.fetch.mockResolvedValueOnce(mockJsonResponse({ items: [{ id: 1 }], page: 1, totalPages: 1 }));
     global.fetch.mockResolvedValueOnce(mockJsonResponse({ slug: "nova-x-pro" }));
     global.fetch.mockResolvedValueOnce(mockJsonResponse({ token: "jwt" }));
     global.fetch.mockResolvedValueOnce(mockJsonResponse({ username: "admin" }));
@@ -90,7 +90,7 @@ describe("api helpers", () => {
     global.fetch.mockResolvedValueOnce(mockJsonResponse({ id: 9 }));
 
     await expect(fetchHome()).resolves.toEqual({ theme: "apple-lite" });
-    await expect(fetchProducts({ categoryCode: "phones", limit: 2 })).resolves.toEqual([{ id: 1 }]);
+    await expect(fetchProducts({ categoryCode: "phones", page: 2, size: 12, q: "nova" })).resolves.toEqual({ items: [{ id: 1 }], page: 1, totalPages: 1 });
     await expect(fetchProductDetail("nova-x-pro")).resolves.toEqual({ slug: "nova-x-pro" });
     await expect(loginUser({ username: "admin", password: "123456" })).resolves.toEqual({ token: "jwt" });
     await expect(fetchCurrentUser("jwt")).resolves.toEqual({ username: "admin" });
@@ -104,7 +104,7 @@ describe("api helpers", () => {
     await expect(updateOrderStatus(9, "PROCESSING", "jwt")).resolves.toEqual({ id: 9 });
 
     expect(global.fetch).toHaveBeenCalledWith("/api/home", expect.any(Object));
-    expect(global.fetch).toHaveBeenCalledWith("/api/catalog/products?categoryCode=phones&limit=2", expect.any(Object));
+    expect(global.fetch).toHaveBeenCalledWith("/api/catalog/products?categoryCode=phones&page=2&size=12&q=nova", expect.any(Object));
     expect(global.fetch).toHaveBeenCalledWith("/api/catalog/products/nova-x-pro", expect.any(Object));
     expect(global.fetch).toHaveBeenCalledWith("/api/auth/login", expect.objectContaining({ method: "POST" }));
     expect(global.fetch).toHaveBeenCalledWith("/api/auth/me", expect.objectContaining({

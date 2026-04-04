@@ -10,8 +10,22 @@ export function CatalogPage({ navigate, route }) {
   const { resolveText, t } = useI18n();
   const selectedCategory = route.searchParams.get("category") || "";
   const selectedSort = route.searchParams.get("sort") || "featured";
+  const selectedKeyword = route.searchParams.get("q") || "";
+  const selectedPage = Math.max(Number(route.searchParams.get("page") || 1) || 1, 1);
   const [categories, setCategories] = useState([]);
-  const [productsState, setProductsState] = useState({ loading: true, products: [], error: "" });
+  const [keywordInput, setKeywordInput] = useState(selectedKeyword);
+  const [productsState, setProductsState] = useState({
+    loading: true,
+    products: [],
+    error: "",
+    page: 1,
+    size: 12,
+    total: 0,
+    totalPages: 0,
+    hasPrevious: false,
+    hasNext: false,
+    keyword: ""
+  });
   const sortOptions = [
     { value: "featured", label: t("sort.featured") },
     { value: "sales", label: t("sort.sales") },
@@ -41,20 +55,34 @@ export function CatalogPage({ navigate, route }) {
   }, []);
 
   useEffect(() => {
+    setKeywordInput(selectedKeyword);
+  }, [selectedKeyword]);
+
+  useEffect(() => {
     let active = true;
 
     setProductsState((current) => ({ ...current, loading: true, error: "" }));
 
     fetchProducts({
       categoryCode: selectedCategory,
-      sort: selectedSort
+      sort: selectedSort,
+      q: selectedKeyword,
+      page: selectedPage,
+      size: 12
     })
-      .then((products) => {
+      .then((payload) => {
         if (active) {
           setProductsState({
             loading: false,
-            products,
-            error: ""
+            products: payload.items || [],
+            error: "",
+            page: payload.page || 1,
+            size: payload.size || 12,
+            total: payload.total || 0,
+            totalPages: payload.totalPages || 0,
+            hasPrevious: Boolean(payload.hasPrevious),
+            hasNext: Boolean(payload.hasNext),
+            keyword: payload.keyword || ""
           });
         }
       })
@@ -63,7 +91,14 @@ export function CatalogPage({ navigate, route }) {
           setProductsState({
             loading: false,
             products: [],
-            error
+            error,
+            page: 1,
+            size: 12,
+            total: 0,
+            totalPages: 0,
+            hasPrevious: false,
+            hasNext: false,
+            keyword: ""
           });
         }
       });
@@ -71,7 +106,7 @@ export function CatalogPage({ navigate, route }) {
     return () => {
       active = false;
     };
-  }, [selectedCategory, selectedSort]);
+  }, [selectedCategory, selectedKeyword, selectedPage, selectedSort]);
 
   const heading = useMemo(() => {
     if (!selectedCategory) {
@@ -82,35 +117,87 @@ export function CatalogPage({ navigate, route }) {
     return category ? resolveText(category.name) : t("catalog.result");
   }, [categories, resolveText, selectedCategory, t]);
 
+  const resultSummary = useMemo(() => {
+    if (productsState.total === 0) {
+      return selectedKeyword ? t("catalog.results.noneWithKeyword") : t("catalog.results.none");
+    }
+
+    return t("catalog.results.summary")
+      .replace("{{count}}", String(productsState.total))
+      .replace("{{page}}", String(productsState.page))
+      .replace("{{totalPages}}", String(Math.max(productsState.totalPages, 1)));
+  }, [productsState.page, productsState.total, productsState.totalPages, selectedKeyword, t]);
+
+  const navigateCatalog = (nextOverrides = {}) => {
+    navigate(
+      createCatalogPath({
+        categoryCode: nextOverrides.categoryCode ?? selectedCategory,
+        sort: nextOverrides.sort ?? selectedSort,
+        keyword: nextOverrides.keyword ?? selectedKeyword,
+        page: nextOverrides.page ?? selectedPage
+      })
+    );
+  };
+
+  const handleSearchSubmit = (event) => {
+    event.preventDefault();
+    navigateCatalog({
+      keyword: keywordInput.trim(),
+      page: 1
+    });
+  };
+
   return (
     <div className="page-stack">
       <section className="catalog-page-toolbar-shell">
         <div className="catalog-page-toolbar">
-          <div className="chip-row">
-            <button
-              className={`filter-chip ${selectedCategory === "" ? "is-selected" : ""}`}
-              type="button"
-              onClick={() => navigate(createCatalogPath("", selectedSort))}
-            >
-              {t("catalog.all")}
-            </button>
-            {categories.map((category) => (
-              <button
-                className={`filter-chip ${selectedCategory === category.code ? "is-selected" : ""}`}
-                key={category.code}
-                type="button"
-                onClick={() => navigate(createCatalogPath(category.code, selectedSort))}
-              >
-                {resolveText(category.name)}
+          <div className="catalog-toolbar-main">
+            <form className="catalog-search-form" onSubmit={handleSearchSubmit}>
+              <input
+                className="catalog-search-input"
+                type="search"
+                value={keywordInput}
+                placeholder={t("catalog.search.placeholder")}
+                onChange={(event) => setKeywordInput(event.target.value)}
+              />
+              <button className="primary-button catalog-search-button" type="submit">
+                {t("catalog.search.submit")}
               </button>
-            ))}
+            </form>
+
+            <div className="chip-row">
+              <button
+                className={`filter-chip ${selectedCategory === "" ? "is-selected" : ""}`}
+                type="button"
+                onClick={() => navigateCatalog({ categoryCode: "", page: 1 })}
+              >
+                {t("catalog.all")}
+              </button>
+              {categories.map((category) => (
+                <button
+                  className={`filter-chip ${selectedCategory === category.code ? "is-selected" : ""}`}
+                  key={category.code}
+                  type="button"
+                  onClick={() => navigateCatalog({ categoryCode: category.code, page: 1 })}
+                >
+                  {resolveText(category.name)}
+                </button>
+              ))}
+            </div>
           </div>
 
-          <SortDropdown
-            onChange={(nextSort) => navigate(createCatalogPath(selectedCategory, nextSort))}
-            options={sortOptions}
-            value={selectedSort}
-          />
+          <div className="catalog-toolbar-side">
+            <div className="catalog-results-meta">
+              <strong>{heading}</strong>
+              <span>{resultSummary}</span>
+            </div>
+
+            <SortDropdown
+              onChange={(nextSort) => navigateCatalog({ sort: nextSort, page: 1 })}
+              options={sortOptions}
+              value={selectedSort}
+            />
+          </div>
         </div>
       </section>
 
@@ -141,6 +228,32 @@ export function CatalogPage({ navigate, route }) {
 
           {productsState.products.length === 0 ? (
             <SectionState title={t("catalog.empty.title")} body={t("catalog.empty.body")} />
+          ) : null}
+
+          {productsState.products.length > 0 && productsState.totalPages > 1 ? (
+            <div className="catalog-pagination">
+              <button
+                className="secondary-button"
+                type="button"
+                disabled={!productsState.hasPrevious}
+                onClick={() => navigateCatalog({ page: productsState.page - 1 })}
+              >
+                {t("catalog.pagination.previous")}
+              </button>
+              <div className="catalog-pagination-summary">
+                {t("catalog.pagination.summary")
+                  .replace("{{page}}", String(productsState.page))
+                  .replace("{{totalPages}}", String(productsState.totalPages))}
+              </div>
+              <button
+                className="secondary-button"
+                type="button"
+                disabled={!productsState.hasNext}
+                onClick={() => navigateCatalog({ page: productsState.page + 1 })}
+              >
+                {t("catalog.pagination.next")}
+              </button>
+            </div>
           ) : null}
         </section>
       ) : null}

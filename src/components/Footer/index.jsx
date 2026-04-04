@@ -6,7 +6,7 @@ import { IconBell, IconInstagram, IconLinkedIn, IconYouTube } from "components/I
 
 export function Footer({ navigate }) {
   const { isAuthenticated } = useAuth();
-  const { language, t } = useI18n();
+  const { t } = useI18n();
   const footerGroups = [
     {
       title: t("footer.mall"),
@@ -125,7 +125,6 @@ export function Footer({ navigate }) {
           <span className="footer-social" aria-hidden="true">
             <IconYouTube className="footer-social-icon" />
           </span>
-          <span className="footer-meta-pill">{t(language === "zh" ? "footer.language.switch.zh" : "footer.language.switch.en")}</span>
         </div>
       </div>
     </footer>
