@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Pagination } from "components/Pagination";
 import { ProductCard } from "components/ProductCard";
 import { ProductCardSkeleton } from "components/ProductCardSkeleton";
@@ -8,20 +8,57 @@ import { useI18n } from "context/I18nContext";
 import { fetchCategories, fetchProducts, getErrorTone, getReadableErrorMessage } from "services/api";
 import { createCatalogPath } from "shared/utils/navigation";
 
+function getCatalogLayout(width) {
+  const safeWidth = width || (typeof window !== "undefined" ? window.innerWidth : 0);
+  let columns = 5;
+
+  if (safeWidth <= 640) {
+    columns = 2;
+  } else if (safeWidth <= 900) {
+    columns = 3;
+  } else if (safeWidth <= 1040) {
+    columns = 4;
+  }
+
+  const pageSizeByColumns = {
+    2: 10,
+    3: 12,
+    4: 16,
+    5: 20
+  };
+
+  return {
+    columns,
+    pageSize: pageSizeByColumns[columns] || 12
+  };
+}
+
+function getRemappedPage(page, previousPageSize, nextPageSize) {
+  const safePage = Math.max(page || 1, 1);
+  const safePreviousPageSize = Math.max(previousPageSize || nextPageSize || 1, 1);
+  const safeNextPageSize = Math.max(nextPageSize || 1, 1);
+  const startIndex = (safePage - 1) * safePreviousPageSize;
+
+  return Math.max(Math.floor(startIndex / safeNextPageSize) + 1, 1);
+}
+
 export function CatalogPage({ navigate, route }) {
   const { resolveText, t } = useI18n();
   const selectedCategory = route.searchParams.get("category") || "";
   const selectedSort = route.searchParams.get("sort") || "featured";
   const selectedKeyword = route.searchParams.get("q") || "";
   const selectedPage = Math.max(Number(route.searchParams.get("page") || 1) || 1, 1);
+  const catalogPanelRef = useRef(null);
+  const previousPageSizeRef = useRef(getCatalogLayout(typeof window !== "undefined" ? window.innerWidth : 1440).pageSize);
   const [categories, setCategories] = useState([]);
   const [keywordInput, setKeywordInput] = useState(selectedKeyword);
+  const [catalogLayout, setCatalogLayout] = useState(() => getCatalogLayout(typeof window !== "undefined" ? window.innerWidth : 1440));
   const [productsState, setProductsState] = useState({
     loading: true,
     products: [],
     error: "",
     page: 1,
-    size: 12,
+    size: previousPageSizeRef.current,
     total: 0,
     totalPages: 0,
     hasPrevious: false,
@@ -61,7 +98,64 @@ export function CatalogPage({ navigate, route }) {
   }, [selectedKeyword]);
 
   useEffect(() => {
+    const updateCatalogLayout = () => {
+      setCatalogLayout((current) => {
+        const nextLayout = getCatalogLayout(typeof window !== "undefined" ? window.innerWidth : 1440);
+
+        if (
+          current.columns === nextLayout.columns &&
+          current.pageSize === nextLayout.pageSize
+        ) {
+          return current;
+        }
+
+        return nextLayout;
+      });
+    };
+
+    const handleWindowResize = () => updateCatalogLayout();
+
+    updateCatalogLayout();
+    window.addEventListener("resize", handleWindowResize);
+
+    return () => {
+      window.removeEventListener("resize", handleWindowResize);
+    };
+  }, []);
+
+  useEffect(() => {
+    const previousPageSize = previousPageSizeRef.current;
+
+    if (previousPageSize === catalogLayout.pageSize) {
+      return;
+    }
+
+    const nextPage = getRemappedPage(selectedPage, previousPageSize, catalogLayout.pageSize);
+
+    if (nextPage !== selectedPage) {
+      navigate(
+        createCatalogPath({
+          categoryCode: selectedCategory,
+          sort: selectedSort,
+          keyword: selectedKeyword,
+          page: nextPage
+        })
+      );
+      return;
+    }
+
+    previousPageSizeRef.current = catalogLayout.pageSize;
+  }, [catalogLayout.pageSize, navigate, selectedCategory, selectedKeyword, selectedPage, selectedSort]);
+
+  useEffect(() => {
     let active = true;
+    const effectivePage = getRemappedPage(selectedPage, previousPageSizeRef.current, catalogLayout.pageSize);
+
+    if (effectivePage !== selectedPage) {
+      return () => {
+        active = false;
+      };
+    }
 
     setProductsState((current) => ({ ...current, loading: true, error: "" }));
 
@@ -69,17 +163,18 @@ export function CatalogPage({ navigate, route }) {
       categoryCode: selectedCategory,
       sort: selectedSort,
       q: selectedKeyword,
-      page: selectedPage,
-      size: 12
+      page: effectivePage,
+      size: catalogLayout.pageSize
     })
       .then((payload) => {
         if (active) {
+          previousPageSizeRef.current = payload.size || catalogLayout.pageSize;
           setProductsState({
             loading: false,
             products: payload.items || [],
             error: "",
             page: payload.page || 1,
-            size: payload.size || 12,
+            size: payload.size || catalogLayout.pageSize,
             total: payload.total || 0,
             totalPages: payload.totalPages || 0,
             hasPrevious: Boolean(payload.hasPrevious),
@@ -95,7 +190,7 @@ export function CatalogPage({ navigate, route }) {
             products: [],
             error,
             page: 1,
-            size: 12,
+            size: catalogLayout.pageSize,
             total: 0,
             totalPages: 0,
             hasPrevious: false,
@@ -108,7 +203,7 @@ export function CatalogPage({ navigate, route }) {
     return () => {
       active = false;
     };
-  }, [selectedCategory, selectedKeyword, selectedPage, selectedSort]);
+  }, [catalogLayout.pageSize, selectedCategory, selectedKeyword, selectedPage, selectedSort]);
 
   const navigateCatalog = (nextOverrides = {}) => {
     navigate(
@@ -130,7 +225,7 @@ export function CatalogPage({ navigate, route }) {
   };
 
   return (
-    <div className="page-stack">
+    <div className="page-stack catalog-page-stack">
       <section className="catalog-page-toolbar-shell">
         <div className="catalog-page-toolbar">
           <div className="catalog-filter-row">
@@ -178,9 +273,12 @@ export function CatalogPage({ navigate, route }) {
       </section>
 
       {productsState.loading ? (
-        <section className="panel catalog-loading-shell">
-          <div className="product-grid product-grid-skeleton">
-            {Array.from({ length: 10 }, (_, index) => (
+        <section className="panel catalog-loading-shell" ref={catalogPanelRef}>
+          <div
+            className="product-grid product-grid-skeleton catalog-product-grid"
+            style={{ gridTemplateColumns: `repeat(${catalogLayout.columns}, minmax(0, 1fr))` }}
+          >
+            {Array.from({ length: catalogLayout.pageSize }, (_, index) => (
               <ProductCardSkeleton key={`catalog-skeleton-${index}`} />
             ))}
           </div>
@@ -201,8 +299,11 @@ export function CatalogPage({ navigate, route }) {
       ) : null}
 
       {!productsState.loading && !productsState.error ? (
-        <section className="panel">
-          <div className="product-grid">
+        <section className="panel" ref={catalogPanelRef}>
+          <div
+            className="product-grid catalog-product-grid"
+            style={{ gridTemplateColumns: `repeat(${catalogLayout.columns}, minmax(0, 1fr))` }}
+          >
             {productsState.products.map((product) => (
               <ProductCard key={product.slug} navigate={navigate} product={product} />
             ))}

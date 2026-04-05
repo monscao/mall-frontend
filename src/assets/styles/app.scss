@@ -721,17 +721,19 @@ html[data-theme="light"] .floating-cart-button span {
 .floating-cart-button:hover,
 .floating-cart-button:focus-visible {
   transform: translateY(-2px);
-  background: color-mix(in srgb, var(--surface-strong) 94%, var(--accent) 6%);
-  border-color: color-mix(in srgb, var(--accent) 35%, var(--line));
-  box-shadow: 0 22px 40px rgba(6, 16, 27, 0.32);
+  background: linear-gradient(135deg, var(--accent), color-mix(in srgb, var(--accent) 70%, #ff8b58 30%));
+  color: #f5f7fb;
+  border-color: color-mix(in srgb, var(--accent) 40%, #ff8b58 24%);
+  box-shadow: 0 22px 42px color-mix(in srgb, var(--accent) 34%, transparent);
 }
 
 .floating-mini-button:hover,
 .floating-mini-button:focus-visible {
   transform: translateY(-2px);
-  background: color-mix(in srgb, var(--surface-strong) 94%, var(--accent) 6%);
-  border-color: color-mix(in srgb, var(--accent) 35%, var(--line));
-  box-shadow: 0 20px 36px rgba(6, 16, 27, 0.28);
+  background: linear-gradient(135deg, var(--accent), color-mix(in srgb, var(--accent) 70%, #ff8b58 30%));
+  color: #f5f7fb;
+  border-color: color-mix(in srgb, var(--accent) 40%, #ff8b58 24%);
+  box-shadow: 0 20px 38px color-mix(in srgb, var(--accent) 30%, transparent);
 }
 
 html[data-theme="light"] .floating-cart-button:hover,
@@ -1073,6 +1075,10 @@ html[data-theme="light"] .floating-mini-button:focus-visible {
   gap: 12px;
 }
 
+.catalog-product-grid {
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+}
+
 .product-card {
   display: grid;
   grid-template-rows: auto 1fr;
@@ -1090,9 +1096,63 @@ html[data-theme="light"] .floating-mini-button:focus-visible {
   cursor: default;
 }
 
+.safe-image-frame {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  border-radius: inherit;
+}
+
+.safe-image-skeleton {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  border-radius: inherit;
+  background: color-mix(in srgb, var(--soft-fill) 92%, rgba(133, 163, 214, 0.12));
+}
+
+.safe-image-img {
+  position: relative;
+  z-index: 1;
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: inherit;
+  opacity: 0;
+  transition: opacity 180ms ease;
+}
+
+.safe-image-frame.is-loaded .safe-image-img {
+  opacity: 1;
+}
+
+.hero-product > .safe-image-frame,
+.gallery-main > .safe-image-frame,
+.gallery-thumb > .safe-image-frame,
+.cart-item > .safe-image-frame {
+  width: 100%;
+  height: 100%;
+}
+
+.category-card > .safe-image-frame {
+  position: absolute;
+  inset: 0;
+}
+
+.gallery-thumb > .safe-image-frame {
+  border-radius: 14px;
+}
+
 .product-visual {
   padding: 0;
   cursor: pointer;
+}
+
+.product-visual .safe-image-frame {
+  aspect-ratio: 1 / 1;
+  background: color-mix(in srgb, var(--soft-fill) 92%, rgba(133, 163, 214, 0.08));
 }
 
 .product-visual img {
@@ -3488,9 +3548,10 @@ html[data-theme="light"] .notification-close:hover {
   padding-right: 16px;
   gap: 10px;
   justify-content: flex-start;
-  background: color-mix(in srgb, var(--accent) 18%, var(--surface-strong));
-  border-color: color-mix(in srgb, var(--accent) 42%, rgba(186, 208, 239, 0.72));
-  box-shadow: 0 24px 48px rgba(32, 86, 156, 0.28);
+  background: linear-gradient(135deg, var(--accent), color-mix(in srgb, var(--accent) 70%, #ff8b58 30%));
+  color: #f5f7fb;
+  border-color: color-mix(in srgb, var(--accent) 40%, #ff8b58 24%);
+  box-shadow: 0 24px 46px color-mix(in srgb, var(--accent) 34%, transparent);
 }
 
 .floating-top-button:hover .floating-top-label,
@@ -3509,11 +3570,12 @@ html[data-theme="light"] .notification-close:hover {
   gap: 10px;
   justify-content: flex-start;
   outline: none;
-  background: color-mix(in srgb, var(--accent) 18%, var(--surface-strong));
-  border-color: color-mix(in srgb, var(--accent) 42%, rgba(186, 208, 239, 0.72));
+  background: linear-gradient(135deg, var(--accent), color-mix(in srgb, var(--accent) 70%, #ff8b58 30%));
+  color: #f5f7fb;
+  border-color: color-mix(in srgb, var(--accent) 40%, #ff8b58 24%);
   box-shadow:
     0 0 0 3px color-mix(in srgb, var(--accent) 22%, transparent),
-    0 24px 48px rgba(32, 86, 156, 0.28);
+    0 24px 46px color-mix(in srgb, var(--accent) 34%, transparent);
 }
 
 .floating-top-icon {
@@ -4005,6 +4067,7 @@ html[data-theme="light"] .floating-top-label {
   }
 
   .app-main {
+    width: min(calc(100% - 20px), var(--container));
     padding: 20px 0 28px;
   }
 
@@ -4090,6 +4153,11 @@ html[data-theme="light"] .floating-top-label {
   .admin-sku-card,
   .management-table-shell {
     border-radius: 20px;
+  }
+
+  .catalog-page-stack > .panel,
+  .catalog-page-toolbar-shell {
+    padding: 16px 14px;
   }
 
   .hero-panel {
@@ -4263,19 +4331,28 @@ html[data-theme="light"] .floating-top-label {
     justify-content: flex-start;
   }
 
-  .pagination-toolbar,
   .pagination-control,
   .pagination-pages {
     flex-wrap: wrap;
   }
 
+  .pagination-toolbar {
+    justify-content: center;
+    flex-wrap: nowrap;
+  }
+
   .pagination-jump {
-    width: auto;
-    justify-content: flex-start;
+    width: 100%;
+    justify-content: center;
   }
 }
 
 @media (max-width: 640px) {
+  .catalog-page-stack > .panel,
+  .catalog-page-toolbar-shell {
+    padding: 14px 12px;
+  }
+
   .pagination-meta,
   .pagination-control,
   .pagination-toolbar,
@@ -4289,25 +4366,53 @@ html[data-theme="light"] .floating-top-label {
     justify-content: stretch;
   }
 
+  .pagination-shell {
+    justify-items: center;
+  }
+
+  .pagination-control {
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+  }
+
   .pagination-toolbar {
+    width: auto;
     justify-content: center;
-    padding: 10px;
-    gap: 8px;
+    flex-wrap: nowrap;
+    padding: 0;
+    gap: 6px;
   }
 
   .pagination-pages {
+    width: auto;
     justify-content: center;
+    flex-wrap: nowrap;
+    gap: 6px;
   }
 
   .pagination-nav,
   .pagination-page,
   .pagination-go {
     min-height: 40px;
+    min-width: 40px;
+    padding-inline: 12px;
   }
 
   .pagination-jump {
-    justify-content: space-between;
-    padding: 10px 12px;
+    width: auto;
+    justify-content: center;
+    padding: 0;
+    gap: 10px;
+  }
+
+  .pagination-jump-label {
+    min-width: 0;
+    white-space: nowrap;
+  }
+
+  .pagination-jump input {
+    width: 54px;
   }
 
   .chip-row {
@@ -4333,6 +4438,10 @@ html[data-theme="light"] .floating-top-label {
   }
 
   .product-grid-skeleton {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .catalog-product-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
