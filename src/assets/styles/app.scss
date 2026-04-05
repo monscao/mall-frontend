@@ -2068,22 +2068,26 @@ html[data-theme="light"] .notification-close:hover {
   width: min(100%, 520px);
   display: grid;
   gap: 18px;
+  min-width: 0;
 }
 
 .auth-copy-compact {
   justify-items: start;
-  gap: 10px;
+  gap: 8px;
 }
 
 .auth-copy-compact h1 {
-  font-size: clamp(2rem, 4vw, 2.8rem);
-  line-height: 1;
+  font-size: clamp(1.5rem, 2.8vw, 2.15rem);
+  line-height: 1.06;
+  letter-spacing: -0.03em;
 }
 
 .auth-copy-compact p {
-  max-width: 46ch;
+  max-width: 40ch;
   color: var(--muted);
   opacity: 1;
+  font-size: 0.95rem;
+  line-height: 1.55;
 }
 
 .auth-form-card {
@@ -2098,6 +2102,7 @@ html[data-theme="light"] .notification-close:hover {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 14px;
+  min-width: 0;
 }
 
 .auth-form-grid-wide {
@@ -2125,6 +2130,15 @@ html[data-theme="light"] .auth-form-card {
 .qty-control {
   display: grid;
   gap: 8px;
+  min-width: 0;
+}
+
+.auth-form input,
+.auth-form-grid input {
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 .form-error {
@@ -3693,6 +3707,40 @@ html[data-theme="light"] .floating-top-label {
 
   .app-main {
     padding: 20px 0 28px;
+  }
+
+  .auth-page {
+    padding: 18px;
+    gap: 18px;
+  }
+
+  .auth-card-shell {
+    width: 100%;
+    gap: 14px;
+  }
+
+  .auth-copy-compact h1 {
+    font-size: clamp(1.25rem, 7vw, 1.65rem);
+    line-height: 1.08;
+  }
+
+  .auth-copy-compact p {
+    font-size: 0.88rem;
+    line-height: 1.5;
+  }
+
+  .auth-form-card {
+    padding: 18px;
+    border-radius: 20px;
+  }
+
+  .auth-form-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .auth-form-grid-wide {
+    grid-column: auto;
   }
 
   .page-stack {
