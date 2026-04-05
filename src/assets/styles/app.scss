@@ -16,13 +16,13 @@
   --radius-xl: 24px;
   --radius-lg: 18px;
   --radius-md: 14px;
-  --container: 1180px;
+  --container: 1680px;
   --page-gutter: clamp(18px, 3.6vw, 38px);
   --page-bg-color: #06101b;
   --page-bg-image:
     radial-gradient(circle at top left, rgba(81, 139, 255, 0.22), transparent 28%),
     radial-gradient(circle at top right, rgba(27, 66, 128, 0.22), transparent 24%),
-    linear-gradient(180deg, #06101b 0%, #081524 45%, #0c1d31 100%);
+    linear-gradient(180deg, #06101b 0%, #081524 38%, #0a1828 72%, #0b1b2c 100%);
   --header-bg: rgba(7, 15, 28, 0.72);
   --panel-border: rgba(129, 159, 199, 0.14);
   --panel-glow: rgba(17, 86, 185, 0.12);
@@ -52,7 +52,7 @@ html[data-theme="light"] {
   --page-bg-image:
     radial-gradient(circle at top left, rgba(255, 130, 88, 0.18), transparent 28%),
     radial-gradient(circle at top right, rgba(55, 116, 211, 0.12), transparent 24%),
-    linear-gradient(180deg, #f8f4ed 0%, #f0ece4 56%, #ebe6dd 100%);
+    linear-gradient(180deg, #f8f4ed 0%, #f3efe7 38%, #efe9df 72%, #ebe6dd 100%);
   --header-bg: rgba(255, 255, 255, 0.62);
   --panel-border: rgba(255, 255, 255, 0.5);
   --panel-glow: rgba(19, 32, 45, 0.08);
@@ -78,13 +78,15 @@ body,
 
 html {
   background-color: var(--page-bg-color);
-  background-image: var(--page-bg-image);
   overscroll-behavior-y: auto;
 }
 
 body {
   background-color: var(--page-bg-color);
   background-image: var(--page-bg-image);
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-attachment: fixed;
   color: var(--text);
   font-family: "Avenir Next", "PingFang SC", "Noto Sans SC", sans-serif;
   font-size: 15px;
@@ -175,7 +177,8 @@ body.auth-route-active {
 .header-inner,
 .site-footer,
 .app-main {
-  width: min(calc(100% - (var(--page-gutter) * 2)), var(--container));
+  width: calc(100% - (var(--page-gutter) * 2));
+  max-width: var(--container);
   margin: 0 auto;
 }
 
@@ -825,6 +828,10 @@ html[data-theme="light"] .floating-mini-button:focus-visible {
 .page-stack {
   display: grid;
   gap: 20px;
+}
+
+.home-page {
+  gap: 22px;
 }
 
 .panel,
@@ -4145,6 +4152,10 @@ html[data-theme="light"] .floating-top-label {
     gap: 18px;
   }
 
+  .home-page {
+    gap: 18px;
+  }
+
   .panel,
   .order-card,
   .section-heading,
@@ -4169,6 +4180,10 @@ html[data-theme="light"] .floating-top-label {
 
   .hero-product {
     grid-row: auto;
+  }
+
+  .home-page .hero-product {
+    max-width: none;
   }
 
   .hero-secondary-card {

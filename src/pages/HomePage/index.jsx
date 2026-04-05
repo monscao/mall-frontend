@@ -68,7 +68,7 @@ export function HomePage({ navigate }) {
   const heroProduct = data?.hero?.product;
 
   return (
-    <div className="page-stack">
+    <div className="page-stack home-page">
       <section className="hero-panel">
         <div className="hero-copy">
           <span className="eyebrow">{resolveText(data.hero?.eyebrow)}</span>
