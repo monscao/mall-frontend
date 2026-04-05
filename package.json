@@ -1,6 +1,6 @@
 {
   "name": "mall-frontend",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "private": true,
   "description": "MONSCAO storefront frontend for the mall platform",
   "scripts": {

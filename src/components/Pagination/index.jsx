@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { IconArrowLeft, IconArrowRight } from "components/Icons";
 import { usePagination } from "hooks/usePagination";
 
 export function Pagination({ currentPage, totalPages, totalItems, onPageChange, t }) {
@@ -19,42 +20,46 @@ export function Pagination({ currentPage, totalPages, totalItems, onPageChange, 
 
   return (
     <div className="pagination-shell">
-      <div className="pagination-meta">
-        <span className="pagination-total">{t("catalog.results.count").replace("{{count}}", String(totalItems || 0))}</span>
-        <span className="pagination-summary">
-          {t("catalog.results.page")
-            .replace("{{page}}", String(currentPage || 1))
-            .replace("{{totalPages}}", String(safeTotalPages))}
-        </span>
-      </div>
-
       <div className="pagination-control">
-        <button
-          className="pagination-nav"
-          type="button"
-          disabled={currentPage <= 1}
-          onClick={() => onPageChange(currentPage - 1)}
-        >
-          {t("catalog.pagination.previous")}
-        </button>
+        <div className="pagination-toolbar">
+          <button
+            className="pagination-nav"
+            type="button"
+            disabled={currentPage <= 1}
+            onClick={() => onPageChange(currentPage - 1)}
+            aria-label={t("catalog.pagination.previous")}
+          >
+            <IconArrowLeft className="pagination-nav-icon" />
+          </button>
 
-        <div className="pagination-pages">
-          {pages.map((page, index) =>
-            page === "..." ? (
-              <span className="pagination-ellipsis" key={`ellipsis-${index}`}>
-                ...
-              </span>
-            ) : (
-              <button
-                className={`pagination-page ${page === currentPage ? "is-active" : ""}`}
-                key={page}
-                type="button"
-                onClick={() => onPageChange(page)}
-              >
-                {page}
-              </button>
-            )
-          )}
+          <div className="pagination-pages">
+            {pages.map((page, index) =>
+              page === "..." ? (
+                <span className="pagination-ellipsis" key={`ellipsis-${index}`}>
+                  ...
+                </span>
+              ) : (
+                <button
+                  className={`pagination-page ${page === currentPage ? "is-active" : ""}`}
+                  key={page}
+                  type="button"
+                  onClick={() => onPageChange(page)}
+                >
+                  {page}
+                </button>
+              )
+            )}
+          </div>
+
+          <button
+            className="pagination-nav"
+            type="button"
+            disabled={currentPage >= safeTotalPages}
+            onClick={() => onPageChange(currentPage + 1)}
+            aria-label={t("catalog.pagination.next")}
+          >
+            <IconArrowRight className="pagination-nav-icon" />
+          </button>
         </div>
 
         <form className="pagination-jump" onSubmit={handleSubmit}>
@@ -70,15 +75,6 @@ export function Pagination({ currentPage, totalPages, totalItems, onPageChange, 
             {t("catalog.pagination.go")}
           </button>
         </form>
-
-        <button
-          className="pagination-nav"
-          type="button"
-          disabled={currentPage >= safeTotalPages}
-          onClick={() => onPageChange(currentPage + 1)}
-        >
-          {t("catalog.pagination.next")}
-        </button>
       </div>
     </div>
   );

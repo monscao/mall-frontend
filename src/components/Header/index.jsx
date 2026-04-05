@@ -23,6 +23,7 @@ export function Header({ currentPath, currentSearch, navigate }) {
   const currentSort = searchParams.get("sort") || "featured";
   const isCatalogRoute = currentPath === "/catalog";
   const isHotRoute = isCatalogRoute && currentSort === "sales";
+  const isAuthRoute = currentPath === "/login" || currentPath === "/register";
 
   const navItems = [
     { label: t("nav.home"), to: "/", isActive: currentPath === "/" },
@@ -65,16 +66,19 @@ export function Header({ currentPath, currentSearch, navigate }) {
           </div>
         </AppLink>
 
-        <button
-          aria-expanded={mobileMenuOpen}
-          aria-label={mobileMenuOpen ? t("header.mobile.close") : t("header.mobile.open")}
-          className="header-mobile-toggle"
-          type="button"
-          onClick={() => setMobileMenuOpen((current) => !current)}
-        >
-          {mobileMenuOpen ? <IconClose className="button-icon-svg" /> : <IconMenu className="button-icon-svg" />}
-        </button>
+        {isAuthRoute ? null : (
+          <button
+            aria-expanded={mobileMenuOpen}
+            aria-label={mobileMenuOpen ? t("header.mobile.close") : t("header.mobile.open")}
+            className="header-mobile-toggle"
+            type="button"
+            onClick={() => setMobileMenuOpen((current) => !current)}
+          >
+            {mobileMenuOpen ? <IconClose className="button-icon-svg" /> : <IconMenu className="button-icon-svg" />}
+          </button>
+        )}
 
+        {isAuthRoute ? null : (
         <div className={`header-mobile-panel ${mobileMenuOpen ? "is-open" : ""}`}>
           <div className="mobile-menu-section">
             <span className="mobile-menu-label">Navigation</span>
@@ -95,6 +99,45 @@ export function Header({ currentPath, currentSearch, navigate }) {
           </div>
 
           <div className="header-actions header-actions-minimal">
+            <div className="mobile-menu-section">
+              <span className="mobile-menu-label">Preferences</span>
+              <div className="mobile-menu-utility-grid">
+                <button
+                  aria-label={theme === "dark" ? t("theme.dark") : t("theme.light")}
+                  className="theme-toggle"
+                  type="button"
+                  onClick={toggleTheme}
+                >
+                  {theme === "dark" ? <IconMoon className="button-icon-svg" /> : <IconSun className="button-icon-svg" />}
+                </button>
+
+                <div className="language-menu" ref={languageRef}>
+                  <button
+                    className="language-menu-trigger"
+                    type="button"
+                    onClick={() => setLanguageOpen((current) => !current)}
+                  >
+                    <IconGlobe className="button-icon-svg" />
+                    {language.toUpperCase()}
+                  </button>
+                  <div className={`language-menu-panel ${languageOpen ? "is-open" : ""}`}>
+                    <button className={`language-menu-item ${language === "zh" ? "is-active" : ""}`} type="button" onClick={() => {
+                      setLanguage("zh");
+                      setLanguageOpen(false);
+                    }}>
+                      ZH
+                    </button>
+                    <button className={`language-menu-item ${language === "en" ? "is-active" : ""}`} type="button" onClick={() => {
+                      setLanguage("en");
+                      setLanguageOpen(false);
+                    }}>
+                      EN
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
             {isAuthenticated ? (
               <div className="mobile-menu-section">
                 <span className="mobile-menu-label">Account</span>
@@ -164,56 +207,20 @@ export function Header({ currentPath, currentSearch, navigate }) {
               <div className="mobile-menu-section">
                 <span className="mobile-menu-label">Account</span>
                 <div className="auth-actions auth-actions-minimal">
-                  <AppLink className="secondary-button header-auth-link" navigate={navigate} to="/login" onClick={() => setMobileMenuOpen(false)}>
-                    {t("auth.login")}
-                  </AppLink>
-                  <AppLink className="primary-button button-small header-auth-link header-auth-link-primary" navigate={navigate} to="/register" onClick={() => setMobileMenuOpen(false)}>
-                    {t("auth.register")}
+                  <AppLink
+                    className="primary-button header-auth-link header-auth-link-primary header-account-entry"
+                    navigate={navigate}
+                    to="/login"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    {t("auth.accountEntry")}
                   </AppLink>
                 </div>
               </div>
             )}
-
-            <div className="mobile-menu-section">
-              <span className="mobile-menu-label">Preferences</span>
-              <div className="mobile-menu-utility-grid">
-                <button
-                  aria-label={theme === "dark" ? t("theme.dark") : t("theme.light")}
-                  className="theme-toggle"
-                  type="button"
-                  onClick={toggleTheme}
-                >
-                  {theme === "dark" ? <IconMoon className="button-icon-svg" /> : <IconSun className="button-icon-svg" />}
-                </button>
-
-                <div className="language-menu" ref={languageRef}>
-                  <button
-                    className="language-menu-trigger"
-                    type="button"
-                    onClick={() => setLanguageOpen((current) => !current)}
-                  >
-                    <IconGlobe className="button-icon-svg" />
-                    {language.toUpperCase()}
-                  </button>
-                  <div className={`language-menu-panel ${languageOpen ? "is-open" : ""}`}>
-                    <button className={`language-menu-item ${language === "zh" ? "is-active" : ""}`} type="button" onClick={() => {
-                      setLanguage("zh");
-                      setLanguageOpen(false);
-                    }}>
-                      ZH
-                    </button>
-                    <button className={`language-menu-item ${language === "en" ? "is-active" : ""}`} type="button" onClick={() => {
-                      setLanguage("en");
-                      setLanguageOpen(false);
-                    }}>
-                      EN
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
           </div>
         </div>
+        )}
       </div>
     </header>
   );

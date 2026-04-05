@@ -87,7 +87,7 @@ export function Footer({ navigate }) {
               placeholder={t("footer.callout.placeholder")}
               type="email"
             />
-            <button className="secondary-button footer-subscribe-button" type="button">
+            <button className="primary-button footer-subscribe-button" type="button">
               <IconBell className="button-icon-svg" />
               {t("footer.callout.button")}
             </button>

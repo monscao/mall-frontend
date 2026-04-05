@@ -1,7 +1,7 @@
 import { lazy, Suspense, useMemo } from "react";
 import { AppShell } from "app/AppShell";
 import { SeoManager } from "app/SeoManager";
-import { SectionState } from "components/SectionState";
+import { PageSkeleton } from "components/PageSkeleton";
 import { useRouter } from "hooks/useRouter";
 
 function lazyPage(loader, exportName) {
@@ -25,6 +25,7 @@ const UserProfilePage = lazyPage(() => import("pages/UserProfilePage"), "UserPro
 
 export function AppRouter() {
   const { route, navigate, orderId, productSlug } = useRouter();
+  const isAuthRoute = route.pathname === "/login" || route.pathname === "/register";
 
   const currentPage = useMemo(() => {
     if (route.pathname === "/") {
@@ -85,11 +86,7 @@ export function AppRouter() {
   return (
     <AppShell currentPath={route.pathname} currentSearch={route.search} navigate={navigate}>
       <SeoManager pathname={route.pathname} productSlug={productSlug} />
-      <Suspense
-        fallback={
-          <SectionState title="Loading page" body="Fetching the next view and preparing the storefront." tone="loading" />
-        }
-      >
+      <Suspense fallback={<PageSkeleton variant={isAuthRoute ? "auth" : "default"} />}>
         {currentPage}
       </Suspense>
     </AppShell>
