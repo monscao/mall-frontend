@@ -57,8 +57,6 @@ jobs:
           script_stop: true
           script: |
             set -e
-            export GHCR_USER='${{ github.actor }}'
-            export GHCR_TOKEN='${{ github.token }}'
             export FRONTEND_VERSION='${{ steps.version.outputs.value }}'
 
             cd /home/ec2-user/apps/deploy
@@ -73,7 +71,6 @@ jobs:
               echo "BACKEND_VERSION=0.0.1-SNAPSHOT" >> .env
             fi
 
-            echo "$GHCR_TOKEN" | docker login ghcr.io -u "$GHCR_USER" --password-stdin
             docker compose pull frontend
             docker compose up -d backend frontend
             docker image prune -f
