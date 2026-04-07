@@ -20,6 +20,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Read frontend version
+        id: version
+        run: echo "value=$(node -p "require('./package.json').version")" >> "$GITHUB_OUTPUT"
+
       - name: Log in to GitHub Container Registry
         uses: docker/login-action@v3
         with:
@@ -43,3 +47,33 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+
+      - name: Deploy frontend to EC2
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.DEPLOY_HOST }}
+          username: ${{ secrets.DEPLOY_USER }}
+          key: ${{ secrets.DEPLOY_SSH_KEY }}
+          script_stop: true
+          script: |
+            set -e
+            export GHCR_USER='${{ github.actor }}'
+            export GHCR_TOKEN='${{ secrets.GITHUB_TOKEN }}'
+            export FRONTEND_VERSION='${{ steps.version.outputs.value }}'
+
+            cd /home/ec2-user/apps/deploy
+
+            if grep -q '^FRONTEND_VERSION=' .env; then
+              sed -i "s/^FRONTEND_VERSION=.*/FRONTEND_VERSION=${FRONTEND_VERSION}/" .env
+            else
+              echo "FRONTEND_VERSION=${FRONTEND_VERSION}" >> .env
+            fi
+
+            if ! grep -q '^BACKEND_VERSION=' .env; then
+              echo "BACKEND_VERSION=0.0.1-SNAPSHOT" >> .env
+            fi
+
+            echo "$GHCR_TOKEN" | docker login ghcr.io -u "$GHCR_USER" --password-stdin
+            docker compose pull frontend
+            docker compose up -d backend frontend
+            docker image prune -f
