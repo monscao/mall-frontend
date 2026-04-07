@@ -2,14 +2,49 @@ import { useEffect, useState } from "react";
 import { IconArrowLeft, IconArrowRight } from "components/Icons";
 import { usePagination } from "hooks/usePagination";
 
+function getCompactPages(currentPage, totalPages) {
+  const safeTotalPages = Math.max(totalPages || 1, 1);
+  const safeCurrentPage = Math.min(Math.max(currentPage || 1, 1), safeTotalPages);
+
+  if (safeTotalPages <= 3) {
+    return Array.from({ length: safeTotalPages }, (_, index) => index + 1);
+  }
+
+  if (safeCurrentPage <= 2) {
+    return [1, 2, 3, "...", safeTotalPages];
+  }
+
+  if (safeCurrentPage >= safeTotalPages - 1) {
+    return [1, "...", safeTotalPages - 2, safeTotalPages - 1, safeTotalPages];
+  }
+
+  return [safeCurrentPage - 1, safeCurrentPage, safeCurrentPage + 1, "...", safeTotalPages];
+}
+
 export function Pagination({ currentPage, totalPages, totalItems, onPageChange, t }) {
-  const pages = usePagination(currentPage, totalPages);
+  const [isCompact, setIsCompact] = useState(() => (typeof window !== "undefined" ? window.innerWidth <= 640 : false));
+  const desktopPages = usePagination(currentPage, totalPages, 1);
   const [pageJumpInput, setPageJumpInput] = useState(String(currentPage || 1));
   const safeTotalPages = Math.max(totalPages || 1, 1);
+  const mobilePages = getCompactPages(currentPage, totalPages);
+  const pages = isCompact ? mobilePages : desktopPages;
 
   useEffect(() => {
     setPageJumpInput(String(currentPage || 1));
   }, [currentPage]);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsCompact(window.innerWidth <= 640);
+    };
+
+    handleResize();
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -62,7 +97,7 @@ export function Pagination({ currentPage, totalPages, totalItems, onPageChange, 
           </button>
         </div>
 
-        <form className="pagination-jump" onSubmit={handleSubmit}>
+        <form className={`pagination-jump ${isCompact ? "is-compact" : ""}`} onSubmit={handleSubmit}>
           <span className="pagination-jump-label">{t("catalog.pagination.jump")}</span>
           <input
             type="number"

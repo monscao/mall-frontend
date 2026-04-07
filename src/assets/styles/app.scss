@@ -4242,14 +4242,17 @@ html[data-theme="light"] .floating-top-label {
     white-space: normal;
   }
 
-  .product-grid,
-  .category-grid,
   .sku-list,
   .footer-links,
   .story-grid,
   .detail-columns,
   .account-grid {
     grid-template-columns: 1fr;
+  }
+
+  .product-grid,
+  .category-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .order-meta-grid,
@@ -4382,18 +4385,21 @@ html[data-theme="light"] .floating-top-label {
   }
 
   .pagination-shell {
-    justify-items: center;
+    width: fit-content;
+    max-width: 100%;
+    margin-left: auto;
+    justify-items: end;
   }
 
   .pagination-control {
     flex-direction: column;
-    align-items: center;
+    align-items: flex-end;
     gap: 14px;
   }
 
   .pagination-toolbar {
     width: auto;
-    justify-content: center;
+    justify-content: flex-end;
     flex-wrap: nowrap;
     padding: 0;
     gap: 6px;
@@ -4401,7 +4407,7 @@ html[data-theme="light"] .floating-top-label {
 
   .pagination-pages {
     width: auto;
-    justify-content: center;
+    justify-content: flex-end;
     flex-wrap: nowrap;
     gap: 6px;
   }
@@ -4409,14 +4415,16 @@ html[data-theme="light"] .floating-top-label {
   .pagination-nav,
   .pagination-page,
   .pagination-go {
-    min-height: 40px;
-    min-width: 40px;
-    padding-inline: 12px;
+    min-height: 36px;
+    min-width: 36px;
+    padding-inline: 10px;
+    border-radius: 11px;
+    font-size: 0.76rem;
   }
 
   .pagination-jump {
     width: auto;
-    justify-content: center;
+    justify-content: flex-end;
     padding: 0;
     gap: 10px;
   }
@@ -4424,10 +4432,27 @@ html[data-theme="light"] .floating-top-label {
   .pagination-jump-label {
     min-width: 0;
     white-space: nowrap;
+    font-size: 0.74rem;
   }
 
   .pagination-jump input {
-    width: 54px;
+    width: 48px;
+    height: 36px;
+    font-size: 0.76rem;
+  }
+
+  .pagination-jump.is-compact .pagination-jump-label {
+    font-size: 0.74rem;
+    opacity: 0.88;
+  }
+
+  .pagination-jump.is-compact .pagination-go {
+    min-width: 34px;
+    padding-inline: 10px;
+  }
+
+  .pagination-jump.is-compact input {
+    width: 52px;
   }
 
   .chip-row {
