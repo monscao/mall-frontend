@@ -460,4 +460,86 @@ export function updateOrderStatus(orderId, status, token) {
   });
 }
 
+export function sendAgentMessage(payload, token) {
+  return apiRequest("/api/agent/chat", {
+    method: "POST",
+    body: JSON.stringify(payload),
+    headers: withAuth(token)
+  });
+}
+
+export async function streamAgentMessage(payload, token, handlers = {}) {
+  let response;
+
+  try {
+    response = await fetch("/api/agent/chat/stream", {
+      method: "POST",
+      headers: {
+        ...jsonHeaders,
+        ...withAuth(token)
+      },
+      body: JSON.stringify(payload),
+      signal: handlers.signal
+    });
+  } catch (error) {
+    if (error?.name === "AbortError") {
+      throw error;
+    }
+    throw createApiError("Network unavailable", 0, "NETWORK_UNAVAILABLE", error.message);
+  }
+
+  if (!response.ok || !response.body) {
+    let data;
+
+    try {
+      data = await response.json();
+    } catch (_error) {
+      data = null;
+    }
+
+    throw normalizeHttpError(response, data, "Agent request failed");
+  }
+
+  const decoder = new TextDecoder();
+  const reader = response.body.getReader();
+  let buffer = "";
+
+  while (true) {
+    const { value, done } = await reader.read();
+    if (done) {
+      break;
+    }
+
+    buffer += decoder.decode(value, { stream: true });
+    const events = buffer.split("\n\n");
+    buffer = events.pop() || "";
+
+    for (const block of events) {
+      const lines = block.split("\n");
+      let eventName = "message";
+      let dataLine = "";
+
+      lines.forEach((line) => {
+        if (line.startsWith("event:")) {
+          eventName = line.slice(6).trim();
+        }
+        if (line.startsWith("data:")) {
+          dataLine += line.slice(5).trim();
+        }
+      });
+
+      if (!dataLine) {
+        continue;
+      }
+
+      const payloadData = JSON.parse(dataLine);
+      if (eventName === "done") {
+        handlers.onDone?.(payloadData);
+      } else if (payloadData.delta) {
+        handlers.onDelta?.(payloadData.delta);
+      }
+    }
+  }
+}
+
 export { AUTH_EXPIRED_EVENT };
